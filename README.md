@@ -30,16 +30,18 @@ It runs locally. Your books stay on your machine. Nothing is uploaded anywhere. 
 
 ## Installation
 
+Works on macOS, Linux, and Windows. Pick whichever option matches your comfort level.
+
 ### Option A — Let Claude Cowork install it for you
 
 If you have [Claude Desktop](https://claude.ai) with Cowork, you don't need to touch a terminal. The repository includes a [`COWORK_INSTALL.md`](COWORK_INSTALL.md) workflow that Cowork can follow:
 
 1. **Open Claude Desktop** and start a Cowork session.
 2. **Tell it:** *"Install Plant Precis Producer from https://github.com/johncourie/plant-precis-producer — follow the COWORK_INSTALL.md workflow"*
-3. Cowork will execute six supervised steps — checking Python, installing poppler, installing dependencies, writing configs, verifying the install, and launching the server. **Each step pauses for your permission** before doing anything to your system.
+3. Cowork will walk through six supervised steps — checking Python, installing poppler, installing dependencies, writing configs, verifying the install, and launching the server. **Each step pauses for your permission** before doing anything to your system.
 4. When done, the browser opens to the setup page at `http://localhost:7734/setup`.
 
-Every step calls an idempotent function from `install_steps.sh`. If something fails, Cowork can safely re-run that step.
+If something fails, Cowork can safely re-run that step — each one checks what's already done before doing anything.
 
 On first launch, the setup page will ask you:
 - Whether you want to connect your Zotero library (auto-detected if installed)
@@ -58,9 +60,9 @@ If you already have [Claude Code](https://claude.ai/claude-code) running, you ca
 Open Claude Code and paste this prompt:
 
 ```
-Clone https://github.com/johncourie/plant-precis-producer, install its 
-dependencies (poppler and the Python packages), copy the example config 
-files to their working names, and start the local server. Then open 
+Clone https://github.com/johncourie/plant-precis-producer, install its
+dependencies (poppler and the Python packages), copy the example config
+files to their working names, and start the local server. Then open
 localhost:7734 in my browser.
 ```
 
@@ -71,12 +73,13 @@ Claude Code will handle the setup and tell you if anything needs your attention.
 Put your PDFs in the `plant-precis-producer/` folder on your machine. Then tell Claude Code:
 
 ```
-Index the new book I added to plant-precis-producer — it's called 
-[filename.pdf], it's a [modern / traditional / peer-reviewed] source, 
-and the author and year are [X].
+Index the new book I added to plant-precis-producer — it's called
+[filename.pdf]. It's a [modern / traditional / peer-reviewed] source.
+The author is [Author Name], the year is [Year], and the title is
+[Book Title].
 ```
 
-Claude Code will probe the PDF, find the index pages, extract the index, and register the book. You don't need to know what any of that means.
+Claude Code will probe the PDF, find the index pages, build the citation template, extract the index, and register the book. You don't need to know what any of that means.
 
 **To start it again later:**
 
@@ -96,30 +99,29 @@ For users comfortable with a terminal.
 - **poppler** (provides `pdftotext`):
   - macOS: `brew install poppler`
   - Ubuntu/Debian: `sudo apt install poppler-utils`
+  - Windows: `scoop install poppler` or `conda install -c conda-forge poppler`
 
 #### Install
 
 ```bash
 git clone https://github.com/johncourie/plant-precis-producer.git
 cd plant-precis-producer
-make setup
-```
-
-Or manually:
-
-```bash
-pip install pypdf reportlab fastapi uvicorn
+pip install -e .
 cp books.example.json books.json
 cp config.example.json config.json
 ```
 
+On macOS/Linux you can also run `make setup`, which does the `pip install` step and reminds you to copy the config files.
+
 #### Run
 
 ```bash
-make serve
+python3 start.py
 ```
 
-This starts the local server and opens `http://localhost:7734` in your browser.
+This starts the local server and opens `http://localhost:7734` in your browser. Works on every platform.
+
+On macOS/Linux you can also use `make serve` or `./start.sh` — they do the same thing.
 
 #### Configure Zotero and external directories
 
@@ -141,6 +143,17 @@ Edit `config.json`:
   ]
 }
 ```
+
+The Zotero `db_path` depends on your operating system. Common locations:
+
+| Platform | Typical path |
+|---|---|
+| macOS | `~/Zotero/zotero.sqlite` |
+| Linux | `~/Zotero/zotero.sqlite` |
+| Linux (Flatpak) | `~/.var/app/org.zotero.Zotero/data/zotero/zotero.sqlite` |
+| Windows | `C:\Users\<you>\AppData\Roaming\Zotero\Zotero\zotero.sqlite` |
+
+Not sure where yours is? In Zotero, go to Edit > Settings > Advanced > Files and Folders > Data Directory Location. The database is `zotero.sqlite` inside that directory. The setup page at `/setup` will also try to auto-detect it for you.
 
 Then scan your external directories:
 
@@ -173,7 +186,7 @@ Once installed, here's how to open Plant Precis Producer:
 
 - **If you used Cowork to install:** Open Claude Desktop and say: *"Start the Plant Precis Producer server and open it in my browser."*
 - **If you used Claude Code:** Open Claude Code in the `plant-precis-producer` folder and say: *"Start the Plant Precis Producer server and open it in my browser."*
-- **If you're a terminal user:** Run `make serve` or `./start.sh` from the project folder.
+- **If you're a terminal user:** Run `python3 start.py` from the project folder.
 
 In all cases, a page opens in your browser at `http://localhost:7734`. That's the app. It runs until you close the terminal window or press Ctrl+C.
 
@@ -193,9 +206,18 @@ You can always get back to setup later by clicking "Setup" in the top-right corn
 2. **Check the lenses** you want — traditional, modern, peer-reviewed, microscopy. Check all of them if you want everything.
 3. **Click Search** — the app searches all your books and (if enabled) your Zotero library.
 4. **Review the results** — they're grouped by lens. Each result shows the book name and the matching index entry. Adjust the page ranges if needed.
-5. **Click Compile Precis** — a PDF downloads to your computer. It includes a table of contents and all the selected pages from your sources, organized by lens.
+5. **Click Compile Precis** — a PDF downloads to your computer. Compilation usually takes 5–30 seconds depending on how many sources you selected. Larger sources like King's (2,977 pages) take longer. The app will tell you it's working — it hasn't crashed, it's just reading a lot of pages.
 
 That's it. You now have a single reference document for that plant, compiled from all your sources.
+
+### What you get
+
+The output is a single PDF named `PlantName_precis.pdf`:
+
+- **Page 1** is a generated table of contents listing every source, grouped by lens (Traditional, Modern, Peer-Reviewed, Microscopy), with page numbers.
+- **Remaining pages** are the actual extracted pages from each source, appended in lens order.
+- **Typical size** is 5–30 pages depending on how many sources and lenses you select. A plant with entries in all four included texts plus a few Zotero papers might produce a 15–25 page document.
+- The file is also saved in the `precis/` folder in the project directory.
 
 ---
 
@@ -238,7 +260,35 @@ The compiled précis groups sources by lens in the table of contents.
 
 ---
 
+## Troubleshooting
+
+**Server won't start / "address already in use"**
+Another process is using port 7734. Check if you already have Plant Precis Producer running in another terminal. To find what's using the port: `lsof -i :7734` on macOS/Linux, or `netstat -ano | findstr 7734` on Windows.
+
+**"pdftotext not found"**
+poppler isn't installed. Head back to the Prerequisites section — there's a one-liner for your platform.
+
+**Compilation seems stuck**
+It's probably not stuck — it's reading pages. King's American Dispensatory alone is nearly 3,000 pages. Give it up to a minute for large compilations. If it's truly frozen (no activity for 2+ minutes), stop the server with Ctrl+C and try again.
+
+**Empty PDF / "No pages were extracted from any source"**
+The page ranges are wrong. The printed page numbers in a book's index don't always match the PDF page numbers — that's what the `page_offset` in `books.json` corrects. Try adjusting the page range in the search results before compiling.
+
+**Zotero shows "not detected" on the setup page**
+The app couldn't find your Zotero database at the default path. This is common on Linux (Flatpak installs use a different directory) and Windows. In Zotero, go to Edit > Settings > Advanced > Files and Folders to find your actual data directory, then update the path on the setup page or in `config.json`. See the Zotero path table above.
+
+**Zotero connected but returns no results**
+Zotero search works in three tiers: collection name, then title, then full-text. If your papers aren't in a collection matching the plant name, try searching by Latin binomial. Also make sure Zotero has finished indexing your PDFs — open Zotero and let it run for a bit if you recently added papers.
+
+**Search returns no results for a plant I know is in my books**
+Plants can be indexed under different names — Latin binomial, common name, drug name, or a synonym. Try a few variations. You can also check the book's index file directly in the `_indexes/` folder to see exactly how entries are spelled.
+
+**Permission error running start.sh (macOS/Linux)**
+Run `chmod +x start.sh`, or just use `python3 start.py` instead — it does the same thing and works everywhere.
+
+---
+
 ## License
 
-Code: GPL-3.0 — see [LICENSE](LICENSE).  
+Code: GPL-3.0 — see [LICENSE](LICENSE).
 Included public domain texts are not subject to copyright restrictions.

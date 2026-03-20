@@ -28,7 +28,7 @@ Install the `pdftotext` tool required for PDF text extraction.
 source install_steps.sh && step_install_poppler
 ```
 
-This will use `brew install poppler` on macOS or `apt-get install poppler-utils` on Linux. Requires permission to install system packages.
+This will use `brew install poppler` on macOS or `apt-get install poppler-utils` on Linux. On Windows, poppler must be installed manually via `scoop install poppler` or `conda install -c conda-forge poppler` before running this step. Requires permission to install system packages.
 
 ### Step 3: Install Python dependencies
 

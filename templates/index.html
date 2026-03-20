@@ -296,7 +296,7 @@ async function doCompile() {
 
   document.getElementById('compile-btn').disabled = true;
   document.getElementById('compile-spinner').style.display = 'inline-block';
-  document.getElementById('compile-msg').innerHTML = '';
+  document.getElementById('compile-msg').innerHTML = '<div class="msg">Compiling \u2014 this usually takes 5\u201330 seconds depending on how many sources are selected.</div>';
 
   try {
     const r = await fetch('/compile', {

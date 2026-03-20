@@ -296,23 +296,53 @@ def browse_directory(path: str = "~"):
 
 # ── Setup API ────────────────────────────────────────────────────────────
 
+def find_zotero_db():
+    """Try known platform-specific Zotero database paths.
+
+    Returns the first path found, or None.
+    """
+    candidates = [
+        os.path.expanduser("~/Zotero/zotero.sqlite"),
+        os.path.expanduser("~/.var/app/org.zotero.Zotero/data/zotero/zotero.sqlite"),
+    ]
+    appdata = os.environ.get("APPDATA")
+    if appdata:
+        candidates.append(os.path.join(appdata, "Zotero", "Zotero", "zotero.sqlite"))
+    for path in candidates:
+        if os.path.exists(path):
+            return path
+    return None
+
+
 @app.get("/setup/status")
 def setup_status():
     """Get current config for the setup page."""
     config = load_config() or {"zotero": {"enabled": False}, "external_dirs": []}
     zotero_cfg = config.get("zotero", {})
-    db_path = os.path.expanduser(zotero_cfg.get("db_path", "~/Zotero/zotero.sqlite"))
+    configured_db = zotero_cfg.get("db_path", "~/Zotero/zotero.sqlite")
+    db_path = os.path.expanduser(configured_db)
 
-    return {
-        "zotero_detected": os.path.exists(db_path),
+    detected = os.path.exists(db_path)
+    suggested_path = None
+    if not detected:
+        found = find_zotero_db()
+        if found:
+            detected = True
+            suggested_path = found
+
+    result = {
+        "zotero_detected": detected,
         "zotero_enabled": zotero_cfg.get("enabled", False),
-        "zotero_db_path": zotero_cfg.get("db_path", "~/Zotero/zotero.sqlite"),
+        "zotero_db_path": configured_db,
         "zotero_storage_path": zotero_cfg.get("storage_path", "~/Zotero/storage"),
         "priority_collections": zotero_cfg.get("priority_collections", []),
         "external_dirs": config.get("external_dirs", []),
         "book_count": len(state.books),
         "index_count": len(state.indexes),
     }
+    if suggested_path:
+        result["zotero_suggested_path"] = suggested_path
+    return result
 
 
 class SetupSave(BaseModel):

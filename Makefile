@@ -12,8 +12,9 @@ check-deps:
 		(echo "ERROR: python3 not found. Install Python 3.9+." && exit 1)
 	@which pdftotext > /dev/null 2>&1 || \
 		(echo "ERROR: pdftotext not found. Install poppler:" && \
-		 echo "  macOS:  brew install poppler" && \
-		 echo "  Ubuntu: sudo apt install poppler-utils" && \
+		 echo "  macOS:   brew install poppler" && \
+		 echo "  Ubuntu:  sudo apt install poppler-utils" && \
+		 echo "  Windows: scoop install poppler" && \
 		 exit 1)
 	@echo "All dependencies found."
 
@@ -21,7 +22,7 @@ install:
 	pip3 install -e .
 
 serve:
-	./start.sh
+	python3 start.py
 
 test:
 	@test -f books.json || (echo "Run: cp books.example.json books.json" && exit 1)

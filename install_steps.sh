@@ -26,6 +26,7 @@ _err()   { printf "\033[0;31m✗ %s\033[0m\n" "$*"; }
 
 _is_macos() { [[ "$(uname)" == "Darwin" ]]; }
 _is_linux() { [[ "$(uname)" == "Linux" ]]; }
+_is_windows() { [[ "$(uname -s)" == MINGW* ]] || [[ "$(uname -s)" == MSYS* ]] || [[ "$(uname -s)" == CYGWIN* ]]; }
 
 # ── Step functions ───────────────────────────────────────────────────────
 
@@ -78,6 +79,13 @@ step_install_poppler() {
             _err "Could not detect package manager. Install poppler-utils manually."
             return 1
         fi
+    elif _is_windows; then
+        _err "Automatic poppler install is not supported on Windows."
+        echo "  Install poppler using one of:"
+        echo "    scoop install poppler"
+        echo "    conda install -c conda-forge poppler"
+        echo "  Or download from: https://github.com/oschwartz10612/poppler-windows/releases"
+        return 1
     else
         _err "Unsupported OS. Install pdftotext manually."
         return 1
@@ -122,15 +130,27 @@ step_write_configs() {
         _ok "config.json exists"
     else
         # Detect Zotero and enable automatically if found
-        local zotero_db="$HOME/Zotero/zotero.sqlite"
-        if [[ -f "$zotero_db" ]]; then
+        local zotero_db=""
+        if [[ -f "$HOME/Zotero/zotero.sqlite" ]]; then
+            zotero_db="$HOME/Zotero/zotero.sqlite"
+        elif [[ -f "$HOME/.var/app/org.zotero.Zotero/data/zotero/zotero.sqlite" ]]; then
+            zotero_db="$HOME/.var/app/org.zotero.Zotero/data/zotero/zotero.sqlite"
+        elif [[ -n "${APPDATA:-}" ]] && [[ -f "$APPDATA/Zotero/Zotero/zotero.sqlite" ]]; then
+            zotero_db="$APPDATA/Zotero/Zotero/zotero.sqlite"
+        fi
+        if [[ -n "$zotero_db" ]]; then
+            local zotero_dir
+            zotero_dir="$(dirname "$zotero_db")"
             python3 -c "
-import json
+import json, sys
+db_path, storage_path = sys.argv[1], sys.argv[2]
 c = json.load(open('config.example.json'))
 c['zotero']['enabled'] = True
+c['zotero']['db_path'] = db_path
+c['zotero']['storage_path'] = storage_path + '/storage'
 json.dump(c, open('config.json','w'), indent=2)
-"
-            _ok "config.json created (Zotero detected and enabled)"
+" "$zotero_db" "$zotero_dir"
+            _ok "config.json created (Zotero detected at $zotero_db)"
         else
             cp config.example.json config.json
             _ok "config.json created from template (Zotero not found)"
@@ -195,18 +215,6 @@ step_launch() {
     # Start the web server and open the browser.
     cd "$PPP_DIR"
 
-    local url="http://localhost:$PPP_PORT"
-
-    _info "Starting Plant Precis Producer at $url"
-
-    # Open browser after a short delay
-    (sleep 1.5 && {
-        if _is_macos; then
-            open "$url/setup" 2>/dev/null
-        else
-            xdg-open "$url/setup" 2>/dev/null
-        fi
-    }) &
-
-    exec python3 server.py
+    _info "Starting Plant Precis Producer..."
+    exec python3 start.py
 }
