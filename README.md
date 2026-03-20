@@ -1,4 +1,4 @@
-# Precis Producer
+# Plant Precis Producer
 
 A tool for compiling per-plant reference précis from pharmacopoeia PDFs, Zotero libraries, and external directories. Sources can be viewed through different **lenses** — traditional, modern, or peer-reviewed — giving you control over the perspective of your research compilation.
 
@@ -16,8 +16,8 @@ Built to work with [Claude Code](https://claude.ai/claude-code) as an AI-assiste
 ### Install
 
 ```bash
-git clone https://github.com/johncourie/precis-producer.git
-cd precis-producer
+git clone https://github.com/johncourie/plant-precis-producer.git
+cd plant-precis-producer
 make setup
 ```
 
