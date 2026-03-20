@@ -1,0 +1,718 @@
+# King's American Dispensatory (1898) - Felter & Lloyd
+# Plant index extracted from front matter (PDF pages 2-25)
+# Format: number. Entry Name (Common Name)
+#
+1. Abies Canadensis (Hemlock Spruce)
+2. Abies canadensis: Pix canadensis (Canada Pitch).
+3. Abies Nigra (Black Spruce)
+4. Abrus (Wild liquorice)
+5. Acacia (Gum arabic)
+6. Acacia catechu (Catechu)
+7. Achillea (Yarrow)
+8. Aconitum: Aconitine
+9. Aconitum napellus (Aconite) (33 kB)
+10. Aconitum fischeri (American Aconite)
+11. Acorus calamus (Sweet flag)
+12. Actaea Alba (White Cohosh)
+13. Adansonia (Baobab)
+14. Adeps (Lard)
+15. Adiantum (Maidenhair fern)
+16. Adonis (Pheasant's Eye)
+17. Aegle marmelos (Bael fruit)
+18. Aesculus (Ohio Buckeye)
+19. Aesculus hippocastanum (Horse-Chestnut)
+20. Agave virginica (False Aloe)
+21. Agrimonia (Agrimony)
+22. Agropyron repens (Couch-grass)
+23. Ailanthus (Tree of Heaven)
+24. Aletris (False Unicorn Root)
+25. Alisma (Water Plantain)
+26. Alkanna (Dyer's Bugloss)
+27. Allium sativum (Garlic)
+28. Allium cepa (Onion)
+29. Alnus (Tag Alder)
+30. Aloe (Aloes)
+31. Aloe sp.: Aloinum (Aloin)
+32. Alpinia officinarum (Galangal)
+33. Alstonia constricta (Alstonia bark)
+34. Alstonia scholaris (Dita bark)
+35. Althaea (Marshmallow)
+36. Amanita sp.: see Polyporus sp.
+37. Amaranthus (Amaranth)
+38. Ambra grisea (Ambergris)
+39. Ambrosia trifida (Tall Ambrosia)
+40. Ammoniacum: see Dorema ammoniacum.
+41. Ampelopsis quinquefolia (American Ivy)
+42. Amygdala: see Prunus dulcis.
+43. Amygdalus Persica: see Prunus persica.
+44. Amylum (Starch)
+45. Anacardium (Cashew-Nut)
+46. Anacyclus pyrethrum (Pyrethrum)
+47. Anagallis Arvensis (Red Chickweed)
+48. Anamirta paniculata: Picrotoxin
+49. Andira (Cabbage Tree Bark)
+50. Andira araroba (Goa powder)
+51. Anemone Nemorosa (Wind Flower)
+52. Anemone Patens (American Pulsatilla)
+53. Anemone Pulsatilla (Pulsatilla)
+54. Anemopsis Californica (Yerba Mansa)
+55. Anethum graveolens: Anethi Fructus (Dill-Fruit)
+56. Angelica Atropurpurea (Purple Angelica)
+57. Angelica archangelica (Garden Angelica)
+58. Angustura: see Galipea.
+59. Anisum: see Pimpinella anisum.
+60. Antennaria (Pearly Everlasting)
+61. Anthemis cotula (Stinking Mayweed)
+62. Anthemis nobilis (Roman Chamomile)
+63. Apis (Honey-bee)
+64. Apocynum cannabinum (Canadian Hemp)
+65. Apocynum androsaemifolium (Dog's Bane)
+66. Aralia hispida (Dwarf elder)
+67. Aralia nudicaulis (False Sarsaparilla)
+68. Aralia racemosa (Spikenard)
+69. Aralia spinosa (Prickly Elder)
+70. Aranea Diadema (Diadem Spider)
+71. Araroba: see Andira araroba
+72. Archangelica atropurpurea: see Angelica atropurpurea.
+73. Archangelica officinalis: see Angelica archangelica.
+74. Arctium lappa (Burdock)
+75. Arctostaphylos (Uva-ursi)
+76. Areca (Betel nut)
+77. Argemone (Prickly poppy)
+78. Arisaema triphylla (Indian Turnip)
+79. Aristolochia serpentaria (Virginia snakeroot)
+80. Armoracia (Horseradish)
+81. Arnica
+82. Artemisia absinthium (Wormwood)
+83. Artemisia pauciflora (Santonica)
+84. Arum: See Arisaema triphylla.
+85. Asafoetida: see Ferula asafoetida.
+86. Asagrea officinalis: Veratrine
+87. Asarum canadense (Wild ginger)
+88. Asarum Europaeum (Asarabacca)
+89. Asclepias Cornuti (Milkweed)
+90. Asclepias Incarnata (Flesh-Colored Asclepias)
+91. Asclepias tuberosa (Pleurisy root)
+92. Asimina triloba (Pawpaw)
+93. Asparagus
+94. Aspidium: see Dryopteris.
+95. Aspidosperma (Quebracho)
+96. Aster Puniceus (Red-Stalked Aster)
+97. Astragalus gummifer (Gum Tragacanth)
+98. Atropa belladonna (Belladonna) (52 kB)
+99. Atropa belladonna: Atropine
+100. Atropa belladonna: Atropine sulphate
+101. Aurantii Amari Cortex: see Citrus Aurantium Cortex.
+102. Aurantii Dulcis Cortex: see Citrus Sinensis Cortex.
+103. Aurantii Flores: see Citrus Aurantium Flores.
+104. Avena Sativa (Common Oat)
+105. Azedarach: see Melia.
+106. Bael fruit: see Aegle.
+107. Balsamum Peruvianum: see Toluifera Pareirae.
+108. Balsamum Tolutanum: see Toluifera Balsamum.
+109. Baptisia tinctoria (Wild Indigo)
+110. Barosma sp. (Buchu)
+111. Beberine sulphate: see Nectandra.
+112. Belae fructus: see Aegle.
+113. Belladonna: see Atropa. (52 kB)
+114. Benzoin: see Styrax benzoin.
+115. Berberis vulgaris (Barberry)
+116. Berberis aquifolium (Oregon Grape)
+117. Betula lenta (Black Birch)
+118. Bidens (Spanish Needles)
+119. Boletus: see Polyporus sp..
+120. Boldo: see Peumus boldus.
+121. Boswellia (Olibanum, Frankincense)
+122. Bryonia (Bryony)
+123. Buchu: see Barosma sp.
+124. Buxus (Box)
+125. Cactus: see Cereus grandiflorus.
+126. Caffea (Coffee) (40 kB)
+127. Caffea sp.: Caffeine
+128. Caffea sp.: Citrated caffeine
+129. Caffea sp.: Effervescent citrated caffeine
+130. Cahinca: see Chiococca sp.
+131. Cajuput: see Melaleuca.
+132. Calamus: see Acorus calamus.
+133. Calamus Draco (Dragon's blood)
+134. Calendula (Garden Marigold)
+135. Callitriche (Water Starwort)
+136. Calumba: see Jateorhiza palmata.
+137. Cambogia: see Garcinia Hanburii.
+138. Camellia sinensis (Tea)
+139. Camphora: see Cinnamomum camphora. (32 kB)
+140. Canarium commune (Elemi)
+141. Canella
+142. Cannabis indica (Indian hemp)
+143. Capsella (Shepherd's purse)
+144. Capsicum (Cayenne pepper)
+145. Cardamom: see Elettaria cardamomum.
+146. Carduus marianus: see Silybum marianum.
+147. Carica papaya (Papaw)
+148. Carota: see Daucus carota.
+149. Carthamus (Dyer's Saffron)
+150. Carum carvi (Caraway)
+151. Caryophyllus: see Syzygium aromaticum.
+152. Cascarilla: see Croton eluteria.
+153. Cassia (Senna)
+154. Cassia fistula (Purging Cassia)
+155. Cassia marilandica (American Senna)
+156. Castanea (Chestnut)
+157. Catalpa (Cigar Tree)
+158. Cataria: see Nepeta cataria.
+159. Catechu: see Acacia catechu.
+160. Caulophyllum (Blue Cohosh)
+161. Ceanothus (Red root)
+162. Celastrus (False Bittersweet)
+163. Centella asiatica (Gotu Kola)
+164. Cephaëlis ipecacuanha (Ipecac) (36 kB)
+165. Cephalanthus (Buttonbush)
+166. Cereus grandiflorus (Night-blooming Cereus)
+167. Cerevisiae Fermentum (Beer Yeast)
+168. Cervus (Burned Deer's Horn)
+169. Cetaceum (Spermaceti)
+170. Cetraria (Iceland moss)
+171. Chamaelirium (Helonias)(Unicorn root)
+172. Chelidonium (Great Celandine)
+173. Chelone (Balmony)
+174. Chenopodium (Wormseed)
+175. Chimaphila (Pipsissewa)
+176. Chiococca (Cahinca)
+177. Chionanthus (Fringe-Tree)
+178. Chirata: see Swertia chirata.
+179. Chondrodendron tomentosum (Pareira)
+180. Chondrus (Carragheen)
+181. Chrysarobinum (Chrysarobin)
+182. Chrysophyllum (Monesia bark)
+183. Cichorium (Chicory)
+184. Cimicifuga (Black Cohosh, Macrotys)
+185. not yet: Cinchona
+186. Cinnamomum (Cinnamon)
+187. Cinnamomum camphor (Camphor) (32 kB)
+188. Cirsium (Canada Thistle)
+189. Citrullus colocynthis (Colocynth)
+190. Citrus aurantium Cortex (Bitter Orange Peel)
+191. Citrus aurantium Flores (Bitter Orange Flowers)
+192. Citrus bergamia: Oil of Bergamot.
+193. Citrus sinensis (Sweet Orange Peel)
+194. Citrus Limon (Lemon)
+195. Claviceps purpurea (Ergot) (59 kB)
+196. Clematis (Virgin's Bower)
+197. Cnicus (Blessed Thistle)
+198. Coca: see Erythroxylon coca.
+199. Cocos nucifera: Cocoanut oil.
+200. Coffea: see Caffea.
+201. Cola Acuminata (Kola)
+202. Colchicum autumnale (Meadow saffron)
+203. Collinsonia (Stone-Root)
+204. Colocynth: see Citrullus colocynthis.
+205. Commiphora myrrha (Myrrh)
+206. Comptonia (Sweet Fern)
+207. Condurango: see Gonolobus condurango.
+208. Conium (Poison Hemlock)
+209. Contrayerva: see Dorstenia contrayerva.
+210. Convallaria (Lily of the Valley)
+211. Convolvulus Scammonia (Scammony)
+212. Copaiba
+213. Coptis (Gold-thread)
+214. Corallorhiza (Coral-Root)
+215. Coriandrum (Coriander)
+216. Coriaria (Currier's Sumach)
+217. Cornu Cervinae Ustum: see Cervus.
+218. Cornus (Dogwood)
+219. Corydalis: see Dicentra canadensis.
+220. Coto (Coto bark)
+221. Cotula: see Anthemis cotula.
+222. Cotyledon (Navelwort)
+223. Crocus (Saffron)
+224. Croton eluteria (Cascarilla)
+225. Croton tiglium (Croton Oil)
+226. Cubeba: see Piper cubeba.
+227. Cucurbita pepo (Pumpkin seed)
+228. Cuminum (Cumin)
+229. Cunila (Dittany)
+230. Curare (Woorari)
+231. Curcas Purgans (Purging-Nut)
+232. Curcuma (Turmeric)
+233. Cusso: see Hagenia abyssinica.
+234. Cyclamen
+235. Cydonia (Quince)
+236. Cynara (Garden Artichoke)
+237. Cynoglossum (Hound's Tongue)
+238. Cypripedium (Ladies' slipper)
+239. Cytisus laburnum (Laburnum)
+240. Cytisus Scoparius (Broom)
+241. Damiana: see Turnera aphrodisiaca.
+242. Daphne Mezereum (Mezereon)
+243. Datura stramonium (Jimson weed)
+244. Daucus carota (Wild carrot)
+245. Delphinium staphisagria (Staphisagria)
+246. Dicentra canadensis (Turkey Corn)
+247. Diervilla (Bush Honeysuckle)
+248. Digitalis (Foxglove) (38 kB)
+249. Dioscorea (Wild Yam)
+250. Diospyros (Persimmon)
+251. Dirca (Leatherwood)
+252. Dorema ammoniacum (Ammoniac)
+253. Dorstenia contrayerva
+254. Dracontium (Skunk-Cabbage)
+255. Drosera (Sundew)
+256. Dryopteris filix-mas (Male fern)
+257. Duboisia (Corkwood elm)
+258. Dulcamara: see Solanum dulcamara.
+259. Ecballium elaterium (Squirting cucumber)
+260. Echinacea angustifolia (Cone flower) (37 kB)
+261. Elaeis guineensis: Palm oil.
+262. Elaterium: see Ecballium elaterium.
+263. Elemi: see Canarium commune.
+264. Elettaria cardamomum (Cardamom)
+265. Epigea (Trailing arbutus)
+266. Epilobium (Willow Herb)
+267. Epiphegus (Beech Drops)
+268. Equisetum (Scouring Rush)
+269. Erechtites (Fireweed)
+270. Ergota: see Claviceps purpurea. (59 kB)
+271. Erigeron (Canada Fleabane)
+272. Eriodictyon (Yerba santa)
+273. Eryngium (Water Eryngo)
+274. Erythronium (Adder's Tongue)
+275. Erythrophleum (Sassy Bark)
+276. Erythroxylon coca (Coca)
+277. Eucalyptus
+278. Eucalyptus: Eucalyptol
+279. Eugenia aromatica: see Syzygium aromaticum.
+280. Euonymus (Wahoo)
+281. Eupatorium perfoliatum (Boneset)
+282. Eupatorium purpureum (Queen of the Meadow)
+283. Euphorbia corollata (Large Flowering Spurge)
+284. Euphorbia hypericifolia (Large Spotted Spurge)
+285. Euphorbia ipecacuanha (American Ipecac)
+286. Euphorbia pilulifera (Pill-bearing Spurge)
+287. Euphorbia resinifera: Euphorbium
+288. Euphrasia (Eyebright)
+289. Fabiana (Pichi)
+290. Farina tritici: see Triticum sativum
+291. Ferula asafoetida (Asafoetida)
+292. Ferula galbaniflua (Galbanum)
+293. Ferula sumbul (Sumbul)
+294. Ficus (Fig)
+295. Foeniculum (Fennel)
+296. Foenum Graecum (Fenugreek)
+297. Fragaria (Wood Strawberry)
+298. Franciscea (Manaca)
+299. Frangula (Buckthorn)
+300. Frankenia (Yerba Reuma)
+301. Frasera (American Columbo)
+302. Fraxinus (Ash)
+303. Fraxinus Ornus (Manna)
+304. Fucus Vesiculosus (Bladder-Wrack)
+305. Fumaria (Fumitory)
+306. Gadus: Cod-liver oil.
+307. Galangal: see Alpinia officinarum
+308. Galbanum: see Ferula galbaniflua
+309. Galega (Goat's Rue)
+310. Galipea sp. (Angustura bark)
+311. Galium (Cleavers)
+312. Galla: see Quercus lusitanica, Nutgall
+313. Garcinia Hanburii (Gamboge)
+314. Garcinia mangostana (Mangosteen)
+315. Gaultheria procumbens (Wintergreen)
+316. Gaultheria: Methyl Salicylate
+317. Gelsemium (37 kB)
+318. Genista (Dyer's green-weed)
+319. Gentiana (Gentian)
+320. Gentiana Ochroleuca (Ochroleucous Gentian)
+321. Gentiana Quinqueflora (Five-Flowered Gentian)
+322. Geranium (Cranesbill)
+323. Gerardia (Bushy Gerardia)
+324. Geum (Avens, Throat-root)
+325. Gillenia (Indian Physic)
+326. Glechoma (Ground Ivy)
+327. Glycyrrhiza (Licorice)
+328. Glycyrrhiza sp.: Glycyrrhizinum Ammoniatum
+329. Gnaphalium (White balsam)
+330. Goodyera (Net-Leaf Plantain)
+331. Gonolobus condurango (Condurango)
+332. Gossypium sp.: Purified Cotton
+333. Gossypium sp.: Cotton root bark
+334. Gossypium sp.: Cotton seed oil.
+335. Gossypium sp.: Pyroxylin.
+336. Granatum: see Punica granatum.
+337. Gratiola (Hedge hyssop)
+338. Grindelia
+339. Guaiacum (Lignum vitae)
+340. Guaiacum sp.: Guaiac resin
+341. Guarana: see Paullinia cupana.
+342. Gutta-Percha: see Isonandra gutta.
+343. Gymnocladus (American Coffee-Nut)
+344. Gynocardia (Chaulmoogra)
+345. Haematoxylon (Logwood)
+346. Hagenia abyssinica (Cusso)
+347. Hamamelis (Witch-hazel)
+348. Hedeoma (American pennyroyal)
+349. Hedera (Ivy)
+350. Helenium (Sneezewort)
+351. Helianthemum (Frostwort)
+352. Helianthus (Sunflower)
+353. Helleborus (Black Hellebore)
+354. Hemidesmus (Indian Sarsaparilla)
+355. Hepatica (Liverleaf)
+356. Heracleum (Masterwort)
+357. Heuchera (Alum-Root)
+358. Hibiscus Esculentus (Okra)
+359. Hieracium (Hawkweed)
+360. Hippocastanum: see Aesculus hippocastanum.
+361. Hordeum (Barley)
+362. Humulus (Hops)
+363. Humulus sp.: Lupulinum (Lupulin)
+364. Hydrangea (Seven Barks)
+365. Hydrastis (Golden Seal) (52 kB)
+366. Hydrocotyle asiatica: see Centella asiatica.
+367. Hyoscyamus (Henbane) (31 kB)
+368. Hypericum (St. John's Wort)
+369. Hyssopus (Hyssop)
+370. Ichthyocolla (Isinglass)
+371. Ignatia: see Strychnos ignatia.
+372. Ilex Opaca (American Holly)
+373. Illicium (Star Anise)
+374. Impatiens (Jewelweed)
+375. Indigofera (Indigo)
+376. Inula (Elecampane)
+377. Ipecac: see Cephaelis ipecacuanha. (36 kB)
+378. Ipomoea jalapa (Jalap)
+379. Iris versicolor (Blue flag)
+380. Iris florentina (Orris)
+381. Isonandra gutta (Gutta-Percha)
+382. Jacaranda (Carob-tree)
+383. Jalapa: see Ipomoea jalapa.
+384. Jateorhiza palmata (Calumba)
+385. Jeffersonia (Twinleaf)
+386. Juglans cinerea (Butternut)
+387. Juniperus (Juniper)
+388. Juniperus oxydedrus: Oil of cade.
+389. Juniperus sabina (Savine)
+390. Juniperus virginiana: Oil of cedar.
+391. Kalmia (Mountain Laurel)
+392. Kamala: see Mallotus phillippiensis.
+393. Kino: see Pterocarpus Marsupium.
+394. Kola: see Cola Acuminata.
+395. Krameria (Rhatany)
+396. Laburnum: see Cytisus laburnum.
+397. Lachnanthes tinctoria (Spirit weed)
+398. Lacmus: see Roccella tinctoria.
+399. Lactuca (Lettuce)
+400. Lactuca sp.: Lactucarium
+401. Laminaria (Sea tangles)
+402. Lappa: see Arctium.
+403. Larix sp.: Laricis Cortex (Larch bark)
+404. Larix Americana (Tamarac)
+405. Laurocerasi folia: see Prunus laurocerasus.
+406. Laurus (Laurel)
+407. Lavandula (Lavender)
+408. Ledum (Labrador Tea)
+409. Leonurus (Motherwort)
+410. Leptandra (Culver's Root)
+411. Leucanthemum (Ox-eye daisy)
+412. Liatris (Gay-feather)
+413. Ligustrum (Privet)
+414. Lilium Candidum (Meadow Lily)
+415. Limon (Lemon): see Citrus Limon.
+416. Linaria (Toad flax)
+417. Lindera (Spice bush)
+418. Linum (Linseed)
+419. Liquidambar (Sweet Gum)
+420. Liquidambar orientale (Styrax)
+421. Liriodendron (Tulip Tree)
+422. Lithospermum (Gromwell)
+423. Lobelia (33 kB)
+424. Lupinus (Lupin)
+425. Lupulinum: see Humulus sp.
+426. Lycopodium (Club moss)
+427. Lycopus (Bugleweed)
+428. Lythrum (Loosestrife)
+429. Macis: see Myristica sp.
+430. Magnolia
+431. Mahonia: see Berberis aquifolium.
+432. Mallotus phillippiensis (Kamala)
+433. Maltum (Malt)
+434. Malus (Apple tree)
+435. Mangifera (Mango)
+436. Manihot (Tapioca)
+437. Manna: see Fraxinus Ornus.
+438. Maranta (Arrow-Root)
+439. Marrubium (Horehound)
+440. Matico: see Piper angustifolium.
+441. Matricaria (Chamomile)
+442. Melaleuca leucadendron: Oil of Cajuput (Tea tree oil).
+443. Melia Azedarach (Azedarach)
+444. Melilotus (Sweet clover)
+445. Melissa (Lemon Balm)
+446. Menispermum (Yellow parilla)
+447. Mentha piperita (Peppermint)
+448. Mentha viridis (Spearmint)
+449. Mentha piperita: Menthol
+450. Menyanthes (Buckbean)
+451. Methyl Salicylate
+452. Mezereum: see Daphne Mezereum.
+453. Mimulus (Hairy Monkeyflower)
+454. Mitchella (Partridgeberry)
+455. Monarda (Horsemint)
+456. Monesia: see Chrysophyllum.
+457. Monotropa (Indian Pipe)
+458. Morus rubra (Red Mulberry)
+459. Moschus (Musk)
+460. Mucuna (Cowhage)
+461. Myrcia (Wild cinnamon): Oil of myrcia.
+462. Myrica (Bayberry)
+463. Myristica (Nutmeg)
+464. Myristica sp.: Macis (Mace)
+465. Myrrha: see Commiphora myrrha.
+466. Myrtus (Myrtle)
+467. Nabalus (Lion's Foot)
+468. Narcissus (Daffodil)
+469. Nectandra (Beeberu bark)
+470. Nectandra: Beberine Sulphate
+471. Nepeta cataria (Catnip)
+472. Nerium oleander (Oleander)
+473. Nicotiana (Tobacco)
+474. Nutgall: see Quercus lusitanica.
+475. Nux vomica: see Strychnos nux-vomica.
+476. Nymphaea (Water Lily)
+477. Oenothera (Evening Primrose)
+478. Olea europaeum: Olive oil.
+479. Oleander: see Nerium oleander.
+480. Olibanum (Frankincense): see Boswellia.
+481. Onosmodium (False gromwell)
+482. Opium: see Papaver somniferum. (92 kB!)
+483. Orchis sp.: Salep
+484. Origanum
+485. Oryza (Rice)
+486. Osmorrhiza (Sweet Cicely)
+487. Osmunda (Buckhorn Brake)
+488. Ostrya (Iron-Wood)
+489. Oxalis (Wood-Sorrel)
+490. Oxydendron (Sourwood Tree)
+491. Paeonia (Peony)
+492. Panax (Ginseng)
+493. Papaver Rhoeas (Red Poppy Petals)
+494. Papaver somniferum (Opium) (92 kB!)
+495. Papaver somniferum: Papaveris Capsulae (Poppy Capsules)
+496. Pareira: see Chondrodendron tomentosum.
+497. Parthenium: see Tanacetum parthenium.
+498. Passiflora (Passion Flower)
+499. Paullinia cupana (Guarana)
+500. Penthorum (Virginia Stone-crop)
+501. Pepo: see Cucurbita pepo.
+502. Petroselinum (Parsley)
+503. Peumus boldus (Boldo)
+504. Phellandrium (Water Fennel)
+505. Physalis (Ground Cherry)
+506. Physostigma (Calabar bean)
+507. Phytolacca (Poke)
+508. Picea abies: Pix burgundica (Burgundy Pitch).
+509. Picraena excelsa (Quassia)
+510. Picrotoxinum: see Anamirta.
+511. Pilocarpus (Jaborandi) (44 kB)
+512. Pimenta (Allspice)
+513. Pimpinella anisum (Anise)
+514. Pinus: Pix liquida (Tar)
+515. Pinus sylvestris: Fir-leaf oil.
+516. Pinus strobus: White pine syrup.
+517. Piper angustifolium (Matico)
+518. Piper nigrum (Black Pepper)
+519. Piper methysticum (Kava-Kava)
+520. Piper cubeba (Cubeb)
+521. Piper nigrum: Piperine
+522. Piscidia (Jamaica Dogwood)
+523. Pistacia lentiscus (Mastic)
+524. Pix burgundica: see Picea abies.
+525. Pix canadensis: see Abies canadensis.
+526. Pix liquida: see Pinus.
+527. Plantago (Plantain)
+528. Podophyllum (May apple)
+529. Polemonium (American Greek Valerian)
+530. Polygala senega (Senega)
+531. Polygonum (Water pepper)
+532. Polymnia (Uvedalia)
+533. Polypodium (Common polypody)
+534. Polyporus sp. (White Agaric)
+535. Polytrichum (Hair-Cap Moss)
+536. Populus (American Poplar)
+537. Potentilla erecta (Tormentil)
+538. Primula (Primrose)
+539. Prinos (Black alder)
+540. Prunus domestica (Prune)
+541. Prunus dulcis (Almond) (Amygdala)
+542. Prunus laurocerasus (Cherry-laurel)
+543. Prunus persica (Peach Tree)
+544. Prunus virginiana (Wild Cherry)
+545. Psoralea
+546. Ptelea (Wafer Ash)
+547. Pteris (Rock brake)
+548. Pterocarpus Marsupium (Kino)
+549. Pterocarpus santalinus (Red saunders, Santalum rubrum)
+550. Pulsatilla: see Anemone pulsatilla.
+551. Punica granatum (Pomegranate)
+552. Pycnanthemum (Wild Basil)
+553. Pyrethrum: Anacyclus pyrethrum
+554. Pyrola (False wintergreen)
+555. Pyroxylin: see Gossypium.
+556. Pyrus: see Malus sp. (Apple tree).
+557. Quassia: see Picraena excelsa.
+558. Quercus alba (White oak)
+559. Quercus lusitanica: Nutgall
+560. Quillaja (Soap-bark tree)
+561. Ranunculus (Crowfoot)
+562. Rhamnus cathartica (Buckthorn)
+563. Rhamnus purshiana (Cascara sagrada)
+564. Rheum (Rhubarb)
+565. Rhododendron (Rosebay)
+566. Rhoeados petala: see Papaver Rhoeas
+567. Rhus aromatica (Fragrant Sumach)
+568. Rhus glabra (Smooth Sumach)
+569. Rhus toxicodendron (Poison ivy) (48 kB)
+570. Ribes (Currant)
+571. Ricinus: Castor oil.
+572. Robinia (Locust tree)
+573. Roccella tinctoria (Lacmus, litmus)
+574. Rosa Canina (Dog Rose)
+575. Rosa Centifolia (Pale Rose)
+576. Rosa damascena: Oil of rose.
+577. Rosa Gallica (Red Rose)
+578. Rosmarinus (Rosemary)
+579. Rubia (Madder)
+580. Rubus (Blackberry)
+581. Rubus idaeus (Raspberry)
+582. Rumex (Yellow Dock)
+583. Rumex Acetosa (Sorrel)
+584. Ruta (Rue)
+585. Sabadilla: see Schoenocaulum.
+586. Sabbatia (American centaury)
+587. Sabina: see Juniperus sabina
+588. Salep: see Orchis sp.
+589. Salix alba (Willow)
+590. Salix nigra (Black Willow)
+591. Salvia (Sage)
+592. Sambucus (Elder)
+593. Sanguinaria (Bloodroot) (37 kB)
+594. Sanicula (Sanicle)
+595. Santalum album: Oil of santal.
+596. Santalum rubrum: see Pterocarpus.
+597. Santonica: see Artemisia pauciflora.
+598. Saponaria (Soapwort)
+599. Sarracenia (Pitcher plant)
+600. Sarsaparilla: see Smilax.
+601. Sassafras
+602. Satureja (Summer Savory)
+603. Scammony: see Convolvulus Scammonia.
+604. Schoenocaulon officinale (Sabadilla)
+605. Scilla: see Urginea maritima.
+606. Scoparius: see Cytisus Scoparius.
+607. Scrophularia (Figwort)
+608. Scutellaria (Scullcap)
+609. Secale cornuta: see Claviceps purpurea. (59 kB)
+610. Sedum acre (Mossy stonecrop)
+611. Selinum (Marsh Parsley)
+612. Senecio (Life Root)
+613. Senega: see Polygala senega.
+614. Senna: see Cassia.
+615. Serenoa (Saw palmetto)
+616. Serpentaria: see Aristolochia.
+617. Sesamum indicum (Sesam)
+618. Sevum (Suet, Sheep tallow)
+619. Silphium (Indian Cup-plant)
+620. Silybum marianum (Milk thistle)
+621. Sinapis (Mustard) (32 kB)
+622. Sisymbrium (Hedge Mustard)
+623. Smilax (Sarsaparilla)
+624. Solanum Carolinense (Horse nettle)
+625. Solanum dulcamara (Bittersweet)
+626. Solidago odora (Sweet-scented goldenrod)
+627. Sophora
+628. Sorbus (Mountain ash)
+629. Spergularia (Sand-spurrey)
+630. Spigelia (Carolina pink, pinkroot)
+631. Spilanthes (Para cress)
+632. Spiraea (Hard hack)
+633. Spiritus vini gallici (Brandy)
+634. Spongia (Sponge)
+635. Staphisagria: see Delphinium staphisagria.
+636. Statice caroliana (Marsh Rosemary)
+637. Stellaria media (Chickweed)
+638. Sticta pulmonaria (Sticta)
+639. Stillingia (Queen's root)
+640. Stramonium: see Datura stramonium.
+641. Strophantus
+642. Strychnos Ignatia (St. Ignatius' Bean)
+643. Strychnos nux-vomica (Nux vomica)
+644. Strychnos nux-vomica: Strychnine.
+645. Strychnos nux-vomica: Strychnine sulphate.
+646. Styrax: see Liquidambar orientale.
+647. Styrax benzoin (Benzoin)
+648. Sumbul: see Ferula sumbul.
+649. Swertia Chirata (Chirata)
+650. Symphytum (Comfrey)
+651. Symplocarpus: Tincture of skunk cabbage.
+652. Syzygium aromaticum (Cloves)
+653. Tabacum: see Nicotiana.
+654. Tamarindus (Tamarind)
+655. Tanacetum (Tansy)
+656. Tanacetum parthenium (Feverfew)
+657. Taraxacum (Dandelion)
+658. Taxus (Yew)
+659. Tela Araneae (Spider's Web)
+660. Tephrosia (Hoary Pea)
+661. Terminalia (Myrobalan)
+662. Teucrium (Germander)
+663. Thalictrum (Rue Anemone)
+664. Thapsia
+665. Thea: see Camellia sinensis.
+666. Theobroma (Cacao)
+667. Thuja (Arbor vitae)
+668. Thymol
+669. Thymus (Thyme)
+670. Tilia (Linden flowers)
+671. Toluifera Balsamum (Balsam of Tolu)
+672. Toluifera Pareira (Balsam of Peru)
+673. Tormentilla: see Potentilla erecta.
+674. Tragacantha: see Astragalus gummifer.
+675. Trifolium (Red clover)
+676. Triglochin (Arrow-Grass)
+677. Trillium (Bethroot)
+678. Triosteum perfoliatum (Fever-root)
+679. Triticum: see Agropyron.
+680. Triticum sativum (Wheat flour)
+681. Turnera aphrodisiaca (Damiana)
+682. Tussilago farfara (Coltsfoot)
+683. Typha (Cattail Flag)
+684. Ulmus (Elm)
+685. Urginea maritima (Squill)
+686. Urtica (Nettle)
+687. Ustilago (Corn Smut)
+688. Uva: see Vitis vinifera.
+689. Uva ursi: see Arctostaphylos.
+690. Uvularia (Bellwort)
+691. Vaccinium (Blue Whortleberry)
+692. Valeriana (Valerian)
+693. Vanilla
+694. Veratrina: see Asagrea (Veratrine)
+695. Veratrum Album (White Hellebore)
+696. Veratrum Viride (American Hellebore)
+697. Verbascum (Mullein)
+698. Verbena (Vervain)
+699. Verbesina (Crown beard)
+700. Vernonia (Iron weed)
+701. Veronica (Speedwell)
+702. Viburnum opulus (Cramp bark)
+703. Viburnum prunifolium (Black haw)
+704. Viola (Violet)
+705. Viscum (Mistletoe)
+706. Vitellus (Yolk of Egg)
+707. Vitis vinifera: Uva (Raisins)
+708. Wintera (Winter's Bark)
+709. Xanthium (Spiny Clot-Bur)
+710. Xanthorrhiza (Shrub Yellow Root)
+711. Xanthoxylum (Prickly Ash)
+712. Zea (Indian Corn)
+713. Zingiber (Ginger)
+714. Zizyphus (Jujube)
