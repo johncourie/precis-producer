@@ -165,6 +165,40 @@ python3 index_new_book.py "New Book.pdf" \
 
 ---
 
+## Usage
+
+### Starting the app
+
+Once installed, here's how to open Plant Precis Producer:
+
+- **If you used Cowork to install:** Open Claude Desktop and say: *"Start the Plant Precis Producer server and open it in my browser."*
+- **If you used Claude Code:** Open Claude Code in the `plant-precis-producer` folder and say: *"Start the Plant Precis Producer server and open it in my browser."*
+- **If you're a terminal user:** Run `make serve` or `./start.sh` from the project folder.
+
+In all cases, a page opens in your browser at `http://localhost:7734`. That's the app. It runs until you close the terminal window or press Ctrl+C.
+
+### First-time setup
+
+The very first time you launch, the app opens to a **Setup** page. Here you can:
+
+1. **Connect Zotero** — If Zotero is installed on your computer, the app will detect it automatically. Flip the toggle to enable it. Your Zotero library is never modified — the app only reads from it.
+2. **Add PDF folders** — Click "Add folder", then "Browse..." to navigate to any folder on your computer that contains PDFs you want to search. You can add as many folders as you want. The files stay where they are.
+3. Click **Save & Continue** to go to the search page.
+
+You can always get back to setup later by clicking "Setup" in the top-right corner of the search page.
+
+### Searching and compiling
+
+1. **Type a plant name** — common name (Yarrow), Latin name (Achillea millefolium), or drug name (Millefolii herba) all work.
+2. **Check the lenses** you want — traditional, modern, peer-reviewed, microscopy. Check all of them if you want everything.
+3. **Click Search** — the app searches all your books and (if enabled) your Zotero library.
+4. **Review the results** — they're grouped by lens. Each result shows the book name and the matching index entry. Adjust the page ranges if needed.
+5. **Click Compile Precis** — a PDF downloads to your computer. It includes a table of contents and all the selected pages from your sources, organized by lens.
+
+That's it. You now have a single reference document for that plant, compiled from all your sources.
+
+---
+
 ## Included public domain texts
 
 Four texts ship with the repository, pre-indexed and ready to use:

@@ -10,6 +10,13 @@ Three-tier search:
   3. Full-text word search — query Zotero's pre-built word index
 
 Output: JSON array of results to stdout, suitable for inclusion in a précis manifest.
+
+ZOTERO SAFETY MODEL:
+  - SQLite connection uses ?mode=ro (read-only at filesystem level)
+  - PRAGMA query_only = ON rejects any INSERT/UPDATE/DELETE at engine level
+  - All queries are SELECT statements — no writes by construction
+  - The Zotero database is never copied, moved, or locked exclusively
+  - Safe to run while Zotero is open
 """
 
 import argparse
@@ -23,12 +30,18 @@ from precis_common import load_config, get_pdf_page_count
 
 
 def open_zotero_db(db_path):
-    """Open Zotero SQLite database in read-only mode."""
+    """Open Zotero SQLite database in read-only mode.
+
+    Safety layers:
+      1. ?mode=ro — SQLite opens the file read-only at the OS level
+      2. PRAGMA query_only — engine rejects any write statement
+    """
     db_path = os.path.expanduser(db_path)
     if not os.path.exists(db_path):
         raise FileNotFoundError(f"Zotero database not found at {db_path}")
     uri = f"file:{db_path}?mode=ro"
     conn = sqlite3.connect(uri, uri=True, timeout=5)
+    conn.execute("PRAGMA query_only = ON")
     conn.row_factory = sqlite3.Row
     return conn
 

@@ -63,6 +63,7 @@ class AppState:
             if os.path.exists(db_path):
                 try:
                     conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True, timeout=2)
+                    conn.execute("PRAGMA query_only = ON")
                     conn.execute("SELECT COUNT(*) FROM items")
                     conn.close()
                     self.zotero_available = True
@@ -250,6 +251,47 @@ def reload_indexes():
     """Reload books.json and all indexes from disk."""
     state.load()
     return {"status": "reloaded", "book_count": len(state.books), "index_count": len(state.indexes)}
+
+
+# ── Folder browser API ────────────────────────────────────────────────────
+
+@app.get("/browse")
+def browse_directory(path: str = "~"):
+    """List directories at a given path for the folder picker UI.
+
+    Restricted to the user's home directory tree.
+    """
+    home = os.path.expanduser("~")
+    resolved = os.path.expanduser(path)
+    resolved = os.path.realpath(resolved)
+
+    # Safety: restrict to home directory tree
+    if not resolved.startswith(home):
+        resolved = home
+
+    if not os.path.isdir(resolved):
+        resolved = home
+
+    dirs = []
+    try:
+        for entry in sorted(os.scandir(resolved), key=lambda e: e.name.lower()):
+            if entry.name.startswith("."):
+                continue
+            if entry.is_dir(follow_symlinks=False):
+                dirs.append(entry.name)
+    except PermissionError:
+        pass
+
+    parent = os.path.dirname(resolved)
+    if not parent.startswith(home):
+        parent = home
+
+    return {
+        "current": resolved,
+        "parent": parent,
+        "dirs": dirs,
+        "at_home": resolved == home,
+    }
 
 
 # ── Setup API ────────────────────────────────────────────────────────────
