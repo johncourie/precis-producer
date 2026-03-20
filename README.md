@@ -4,78 +4,69 @@ A tool for compiling per-plant reference précis from pharmacopoeia and botanica
 
 Built to work with [Claude Code](https://claude.ai/claude-code) as an AI-assisted lookup agent — see `PRECIS_PROMPT.md` for the full prompt.
 
-## Prerequisites
-
-- Python 3.8+
-- [pypdf](https://pypi.org/project/pypdf/)
-- [reportlab](https://pypi.org/project/reportlab/)
+## Quick Start
 
 ```bash
+# Clone and install dependencies
+git clone https://github.com/johncourie/precis-producer.git
+cd precis-producer
 pip install pypdf reportlab
-```
 
-## Setup
+# Set up the book registry from the included public domain texts
+cp books.example.json books.json
 
-1. Clone this repository.
-2. Copy `books.example.json` to `books.json`.
-3. Place your source PDFs in the project root.
-4. Index each book using `index_new_book.py` (see below), or manually create index files in `_indexes/`.
-
-## Usage
-
-### Compile a précis
-
-Create a JSON manifest describing the plant and which pages to extract from each source:
-
-```json
+# Compile a test précis (e.g., Yarrow — appears in all 4 included books)
+cat > manifest.json << 'EOF'
 {
   "plant": "Achillea millefolium",
   "sources": [
-    {
-      "file": "Some Pharmacopoeia.pdf",
-      "pages": "209-214",
-      "citation": "Author. (Year). Title. pp. 209–214."
-    }
+    {"file": "potterscyclopaed00wreniala.pdf", "pages": "309-310"},
+    {"file": "1919-Ellingwood-American-Materia-Medica-Therapeutics-Pharmacognosy.pdf", "pages": "2-3"},
+    {"file": "Felters_Materia_Medica.pdf", "pages": "4-4"}
   ]
 }
-```
-
-Then compile:
-
-```bash
+EOF
 python3 compile_precis.py manifest.json
 ```
 
 The output PDF appears in `precis/`.
 
-**Page numbers** in the manifest are *printed* page numbers from the book's index. The script converts them to PDF page numbers using the offset in `books.json`.
+## Included Public Domain Texts
 
-For books with non-linear page numbering (offset mode `"lookup"`), provide a `lookup_key` instead:
+These four texts ship with the repository and are ready to use immediately:
 
-```json
-{
-  "file": "European Pharmacopoeia 5th Ed.pdf",
-  "pages": "1-2",
-  "lookup_key": "Millefolii herba",
-  "citation": "Council of Europe. (2004). European Pharmacopoeia 5th Ed. Millefolii herba."
-}
-```
+| Book | Author | Year | Pages |
+|------|--------|------|-------|
+| Potter's Cyclopaedia of Botanical Drugs | R.C. Wren | 1907 | 386 |
+| American Materia Medica, Therapeutics and Pharmacognosy | F. Ellingwood | 1919 | 470 |
+| The Eclectic Materia Medica, Pharmacology and Therapeutics | H.W. Felter | 1922 | 480 |
+| King's American Dispensatory | H.W. Felter & J.U. Lloyd | 1898 | 2,977 |
 
-### Add a new book
+All are in the public domain (pre-1927 US publication).
 
-#### Phase 1: Probe
+## Adding Your Own Books
 
-Extract the first and last pages as text to identify where the index/TOC lives:
+You can add any PDF reference book to the system. Your own books and their indexes are automatically gitignored — only the included public domain texts are tracked.
+
+### Prerequisites
+
+- [poppler](https://poppler.freedesktop.org/) (provides `pdftotext`): `brew install poppler` on macOS
+
+### Phase 1: Probe
+
+Extract sample pages to locate the book's table of contents or index:
 
 ```bash
 python3 index_new_book.py "New Book.pdf" --id newbook --probe-only
 ```
 
-Inspect the generated text files in `_indexes/` to find index page ranges and entry format.
+Review the generated `_indexes/newbook_front.txt` and `_indexes/newbook_back.txt` to identify:
+1. Which pages contain the TOC or alphabetical index
+2. The format of entries (Latin names, common names, page numbers)
 
-#### Phase 2: Index
+### Phase 2: Index
 
-For books with consistent page offsets (most books):
+**For books with consistent page numbering** (most books):
 
 ```bash
 python3 index_new_book.py "New Book.pdf" \
@@ -87,9 +78,9 @@ python3 index_new_book.py "New Book.pdf" \
     --notes "Entries by Latin binomial."
 ```
 
-The script auto-detects the page offset by cross-referencing index entries against the PDF.
+The script auto-detects the page offset. If auto-detection fails, provide `--offset N` explicitly.
 
-For books with non-linear page numbering:
+**For books with non-linear page numbering** (rare):
 
 ```bash
 python3 index_new_book.py "New Book.pdf" \
@@ -101,25 +92,53 @@ python3 index_new_book.py "New Book.pdf" \
     --citation "Author. (Year). Title. {lookup_key}."
 ```
 
-#### Phase 3: Verify
+This builds a lookup mapping each entry to its actual PDF page.
+
+### Phase 3: Verify
 
 Compile a test précis for a plant you know is in the new book and check the extracted pages.
 
-## File structure
+## How It Works
+
+1. **`books.json`** — Registry of all source books with metadata: filename, page offset, citation template, index file path, and offset mode (fixed or lookup).
+
+2. **`_indexes/`** — Pre-extracted text indexes from each book's TOC or back-of-book index. These allow fast plant lookup without opening the PDFs.
+
+3. **`compile_precis.py`** — Takes a JSON manifest specifying a plant name and page ranges from each source. Converts printed page numbers to PDF page numbers using the offset from `books.json`, extracts the pages, and compiles them into a single PDF with a generated table of contents.
+
+4. **`index_new_book.py`** — Onboards new PDFs: extracts index text, auto-detects page offsets, and registers the book in `books.json`.
+
+Two offset modes handle different book formats:
+- **Fixed**: `PDF_page = printed_page + offset` (most books)
+- **Lookup**: A JSON file maps entry names to PDF page numbers (for books with non-linear numbering)
+
+## File Structure
 
 ```
 ├── compile_precis.py          # Main compilation script
 ├── index_new_book.py          # Book indexing script
-├── books.json                 # Book registry (your local config, gitignored)
-├── books.example.json         # Example book registry
+├── books.json                 # Book registry (local, gitignored)
+├── books.example.json         # Default registry (PD books only)
 ├── PRECIS_PROMPT.md           # Claude Code agent prompt
-├── _indexes/                  # Extracted index files (gitignored)
-│   ├── bookid.txt             # Text index for each book
-│   └── bookid_lookup.json     # Lookup map for non-linear books
-├── precis/                    # Generated précis PDFs (gitignored)
-└── *.pdf                      # Source PDFs (gitignored)
+│
+├── _indexes/                  # Index files
+│   ├── potters.txt            # ✓ tracked (public domain)
+│   ├── ellingwood.txt         # ✓ tracked (public domain)
+│   ├── felter_mm.txt          # ✓ tracked (public domain)
+│   ├── kings.txt              # ✓ tracked (public domain)
+│   ├── kings_lookup.json      # ✓ tracked (public domain)
+│   └── <your_book>.txt        # ✗ gitignored (your additions)
+│
+├── *.pdf                      # Source PDFs
+│   ├── (4 PD texts)           # ✓ tracked (public domain)
+│   └── <your_books>.pdf       # ✗ gitignored (your additions)
+│
+├── precis/                    # Generated output (gitignored)
+└── manifest.json              # Per-run input (gitignored)
 ```
 
 ## License
 
-GPL-3.0 — see [LICENSE](LICENSE).
+Code: GPL-3.0 — see [LICENSE](LICENSE).
+
+The included public domain texts are not subject to copyright restrictions.
