@@ -26,8 +26,7 @@ def open_zotero_db(db_path):
     """Open Zotero SQLite database in read-only mode."""
     db_path = os.path.expanduser(db_path)
     if not os.path.exists(db_path):
-        print(f"ERROR: Zotero database not found at {db_path}", file=sys.stderr)
-        sys.exit(1)
+        raise FileNotFoundError(f"Zotero database not found at {db_path}")
     uri = f"file:{db_path}?mode=ro"
     conn = sqlite3.connect(uri, uri=True, timeout=5)
     conn.row_factory = sqlite3.Row

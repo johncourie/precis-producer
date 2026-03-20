@@ -275,8 +275,7 @@ def compile_precis(manifest):
         current_page += page_count
 
     if not toc_entries:
-        print("ERROR: No pages were extracted from any source.", file=sys.stderr)
-        sys.exit(1)
+        raise ValueError("No pages were extracted from any source.")
 
     # Generate TOC
     toc_path = OUTPUT_DIR / "_toc_temp.pdf"

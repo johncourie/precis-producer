@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plant Precis Producer</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f5f5f0; color: #333; max-width: 900px; margin: 0 auto; padding: 20px; }
+  h1 { font-size: 1.6em; margin-bottom: 4px; color: #2c3e50; }
+  .subtitle { color: #777; font-size: 0.9em; margin-bottom: 20px; }
+  .card { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin-bottom: 16px; }
+  .card h2 { font-size: 1.1em; margin-bottom: 12px; color: #34495e; }
+  label { display: block; margin-bottom: 6px; font-size: 0.9em; font-weight: 500; }
+  input[type="text"] { width: 100%; padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 1em; }
+  input[type="text"]:focus { outline: none; border-color: #5b7fa6; box-shadow: 0 0 0 2px rgba(91,127,166,0.2); }
+  .lens-group { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
+  .lens-group label { display: inline-flex; align-items: center; gap: 4px; font-weight: normal; cursor: pointer; background: #eef2f7; padding: 4px 10px; border-radius: 14px; font-size: 0.85em; }
+  .lens-group input:checked + span { font-weight: 600; }
+  button { padding: 8px 20px; border: none; border-radius: 4px; font-size: 0.95em; cursor: pointer; }
+  .btn-primary { background: #5b7fa6; color: #fff; }
+  .btn-primary:hover { background: #4a6d91; }
+  .btn-primary:disabled { background: #aaa; cursor: not-allowed; }
+  .btn-secondary { background: #e0e0e0; color: #333; }
+  .btn-secondary:hover { background: #d0d0d0; }
+  .btn-small { padding: 4px 12px; font-size: 0.8em; }
+  .actions { display: flex; gap: 10px; align-items: center; margin-top: 12px; }
+  .spinner { display: none; width: 18px; height: 18px; border: 2px solid #ccc; border-top-color: #5b7fa6; border-radius: 50%; animation: spin 0.6s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .results { margin-top: 16px; }
+  .result-group { margin-bottom: 14px; }
+  .result-group h3 { font-size: 0.95em; color: #5b7fa6; margin-bottom: 6px; text-transform: capitalize; }
+  .source-item { display: flex; align-items: flex-start; gap: 8px; padding: 6px 0; border-bottom: 1px solid #f0f0f0; font-size: 0.88em; }
+  .source-item:last-child { border-bottom: none; }
+  .source-item input[type="checkbox"] { margin-top: 3px; flex-shrink: 0; }
+  .source-info { flex: 1; }
+  .source-book { font-weight: 600; }
+  .source-match { color: #666; font-size: 0.85em; margin-top: 2px; }
+  .source-pages { margin-top: 4px; }
+  .source-pages input[type="text"] { width: 100px; padding: 3px 6px; font-size: 0.85em; }
+  .zotero-tag { background: #e8f5e9; color: #2e7d32; padding: 1px 6px; border-radius: 8px; font-size: 0.75em; }
+  .status-bar { font-size: 0.8em; color: #888; padding: 8px 0; display: flex; gap: 16px; }
+  .status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; }
+  .dot-green { background: #4caf50; }
+  .dot-red { background: #f44336; }
+  .dot-grey { background: #bbb; }
+  .msg { padding: 10px; border-radius: 4px; margin-top: 12px; font-size: 0.9em; }
+  .msg-error { background: #fdecea; color: #b71c1c; }
+  .msg-success { background: #e8f5e9; color: #1b5e20; }
+  #compile-section { display: none; }
+</style>
+</head>
+<body>
+
+<h1>Plant Precis Producer</h1>
+<p class="subtitle">Compile per-plant reference sheets from pharmacopoeia and journal sources</p>
+
+<div class="status-bar" id="status-bar">Loading...</div>
+
+<div class="card">
+  <h2>Search</h2>
+  <label for="plant-name">Plant name</label>
+  <input type="text" id="plant-name" placeholder="e.g. Achillea millefolium, Yarrow, Comfrey">
+  <label for="synonyms" style="margin-top:10px">Synonyms (comma-separated, optional)</label>
+  <input type="text" id="synonyms" placeholder="e.g. yarrow, milfoil">
+  <div style="margin-top:12px">
+    <label>Lenses</label>
+    <div class="lens-group" id="lens-group"></div>
+  </div>
+  <div class="actions">
+    <button class="btn-primary" id="search-btn" onclick="doSearch()">Search</button>
+    <div class="spinner" id="search-spinner"></div>
+  </div>
+</div>
+
+<div class="card" id="results-card" style="display:none">
+  <h2>Sources Found</h2>
+  <div id="results"></div>
+  <div id="compile-section">
+    <div class="actions">
+      <button class="btn-primary" id="compile-btn" onclick="doCompile()">Compile Precis</button>
+      <button class="btn-secondary btn-small" onclick="selectAll(true)">Select All</button>
+      <button class="btn-secondary btn-small" onclick="selectAll(false)">Deselect All</button>
+      <div class="spinner" id="compile-spinner"></div>
+    </div>
+  </div>
+  <div id="compile-msg"></div>
+</div>
+
+<script>
+let appStatus = null;
+let searchResults = null;
+
+async function loadStatus() {
+  try {
+    const r = await fetch('/status');
+    appStatus = await r.json();
+    renderStatus();
+  } catch (e) {
+    document.getElementById('status-bar').textContent = 'Server unavailable';
+  }
+}
+
+function renderStatus() {
+  const s = appStatus;
+  const zDot = s.zotero_available ? 'dot-green' : 'dot-grey';
+  const zText = s.zotero_available ? 'Zotero connected' : 'Zotero off';
+  document.getElementById('status-bar').innerHTML =
+    `<span>${s.book_count} books loaded</span>` +
+    `<span>${s.index_count} indexes in memory</span>` +
+    `<span><span class="status-dot ${zDot}"></span>${zText}</span>`;
+
+  // Render lens checkboxes
+  const group = document.getElementById('lens-group');
+  group.innerHTML = '';
+  for (const lens of s.lenses) {
+    const checked = lens !== 'microscopy' ? 'checked' : '';
+    group.innerHTML += `<label><input type="checkbox" name="lens" value="${lens}" ${checked}><span>${lens.replace('_',' ')}</span></label>`;
+  }
+}
+
+function getSelectedLenses() {
+  return [...document.querySelectorAll('input[name="lens"]:checked')].map(el => el.value);
+}
+
+async function doSearch() {
+  const plantName = document.getElementById('plant-name').value.trim();
+  if (!plantName) return;
+
+  const synonyms = document.getElementById('synonyms').value.split(',').map(s => s.trim()).filter(Boolean);
+  const lenses = getSelectedLenses();
+  const includeZotero = lenses.includes('peer_reviewed') && appStatus.zotero_available;
+
+  document.getElementById('search-btn').disabled = true;
+  document.getElementById('search-spinner').style.display = 'inline-block';
+  document.getElementById('results-card').style.display = 'none';
+
+  try {
+    const r = await fetch('/search', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ plant_name: plantName, synonyms, lenses, include_zotero: includeZotero }),
+    });
+    searchResults = await r.json();
+    renderResults(plantName);
+  } catch (e) {
+    alert('Search failed: ' + e.message);
+  } finally {
+    document.getElementById('search-btn').disabled = false;
+    document.getElementById('search-spinner').style.display = 'none';
+  }
+}
+
+function renderResults(plantName) {
+  const container = document.getElementById('results');
+  container.innerHTML = '';
+
+  const bookResults = searchResults.book_results || [];
+  const zoteroResults = searchResults.zotero_results || [];
+
+  if (bookResults.length === 0 && zoteroResults.length === 0) {
+    container.innerHTML = '<p style="color:#888;font-size:0.9em">No results found.</p>';
+    document.getElementById('results-card').style.display = 'block';
+    document.getElementById('compile-section').style.display = 'none';
+    return;
+  }
+
+  // Group book results by primary lens
+  const grouped = {};
+  for (const r of bookResults) {
+    const lens = (r.lens && r.lens[0]) || 'other';
+    if (!grouped[lens]) grouped[lens] = [];
+    grouped[lens].push(r);
+  }
+
+  const lensOrder = ['traditional', 'modern', 'microscopy', 'other'];
+  let idx = 0;
+
+  for (const lens of lensOrder) {
+    if (!grouped[lens]) continue;
+    const div = document.createElement('div');
+    div.className = 'result-group';
+    const lensLabel = lens.replace('_', ' ');
+    div.innerHTML = `<h3>${lensLabel}</h3>`;
+
+    for (const r of grouped[lens]) {
+      const match = r.matched_lines[0] || '';
+      const pageHint = extractPageFromLine(match, r.offset_mode);
+      div.innerHTML += `
+        <div class="source-item">
+          <input type="checkbox" checked data-idx="${idx}" data-type="book"
+            data-file="${escHtml(r.file)}" data-lens='${JSON.stringify(r.lens)}'
+            data-offset-mode="${r.offset_mode}">
+          <div class="source-info">
+            <div class="source-book">${escHtml(r.short_name)}</div>
+            <div class="source-match">${escHtml(match)}</div>
+            <div class="source-pages">
+              Pages: <input type="text" class="page-input" data-idx="${idx}" value="${pageHint}" placeholder="e.g. 209-212">
+            </div>
+          </div>
+        </div>`;
+      idx++;
+    }
+    container.appendChild(div);
+  }
+
+  // Zotero results
+  if (zoteroResults.length > 0) {
+    const div = document.createElement('div');
+    div.className = 'result-group';
+    div.innerHTML = '<h3>peer reviewed <span class="zotero-tag">Zotero</span></h3>';
+
+    for (const r of zoteroResults) {
+      const title = r.title || r.citation || '';
+      const method = r.search_method || '';
+      div.innerHTML += `
+        <div class="source-item">
+          <input type="checkbox" checked data-idx="${idx}" data-type="zotero"
+            data-file="${escHtml(r.file)}" data-pages="${escHtml(r.pages)}"
+            data-citation="${escHtml(r.citation)}" data-lens='["peer_reviewed"]'>
+          <div class="source-info">
+            <div class="source-book">${escHtml(title.substring(0, 80))}</div>
+            <div class="source-match">[${method}] ${escHtml(r.citation.substring(0, 120))}</div>
+            <div class="source-pages">
+              Pages: <input type="text" class="page-input" data-idx="${idx}" value="${r.pages}" placeholder="1-N">
+            </div>
+          </div>
+        </div>`;
+      idx++;
+    }
+    container.appendChild(div);
+  }
+
+  document.getElementById('results-card').style.display = 'block';
+  document.getElementById('compile-section').style.display = 'block';
+  document.getElementById('compile-msg').innerHTML = '';
+}
+
+function extractPageFromLine(line, offsetMode) {
+  // Try to extract page numbers from index line
+  // Patterns: "Plant Name ... 209" or "Plant_342" or "Plant Name, 309"
+  const m = line.match(/[\.\s,_]+(\d{1,4})\s*[-–]?\s*(\d{1,4})?\s*$/);
+  if (m) {
+    const start = m[1];
+    const end = m[2] || (parseInt(start) + 1).toString();
+    if (offsetMode === 'lookup') {
+      // For lookup mode, pages is page count, and we need lookup_key
+      return '1-2';
+    }
+    return `${start}-${end}`;
+  }
+  return '';
+}
+
+function escHtml(s) {
+  const d = document.createElement('div');
+  d.textContent = s || '';
+  return d.innerHTML;
+}
+
+function selectAll(checked) {
+  document.querySelectorAll('#results input[type="checkbox"]').forEach(el => el.checked = checked);
+}
+
+async function doCompile() {
+  const plantName = document.getElementById('plant-name').value.trim();
+  if (!plantName) return;
+
+  const sources = [];
+  document.querySelectorAll('#results input[type="checkbox"]:checked').forEach(el => {
+    const idx = el.dataset.idx;
+    const pageInput = document.querySelector(`.page-input[data-idx="${idx}"]`);
+    const pages = pageInput ? pageInput.value.trim() : '';
+    if (!pages) return;
+
+    const source = {
+      file: el.dataset.file,
+      pages: pages,
+      lens: JSON.parse(el.dataset.lens || '[]'),
+    };
+
+    if (el.dataset.type === 'zotero') {
+      source.citation = el.dataset.citation;
+    }
+
+    sources.push(source);
+  });
+
+  if (sources.length === 0) {
+    document.getElementById('compile-msg').innerHTML = '<div class="msg msg-error">No sources selected or no page ranges entered.</div>';
+    return;
+  }
+
+  document.getElementById('compile-btn').disabled = true;
+  document.getElementById('compile-spinner').style.display = 'inline-block';
+  document.getElementById('compile-msg').innerHTML = '';
+
+  try {
+    const r = await fetch('/compile', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ plant_name: plantName, sources }),
+    });
+
+    if (!r.ok) {
+      const err = await r.json();
+      throw new Error(err.error || 'Compilation failed');
+    }
+
+    const blob = await r.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = r.headers.get('Content-Disposition')?.match(/filename="(.+)"/)?.[1] || 'precis.pdf';
+    a.click();
+    URL.revokeObjectURL(url);
+
+    document.getElementById('compile-msg').innerHTML = '<div class="msg msg-success">Precis compiled and downloaded.</div>';
+  } catch (e) {
+    document.getElementById('compile-msg').innerHTML = `<div class="msg msg-error">${escHtml(e.message)}</div>`;
+  } finally {
+    document.getElementById('compile-btn').disabled = false;
+    document.getElementById('compile-spinner').style.display = 'none';
+  }
+}
+
+// Enter key triggers search
+document.getElementById('plant-name').addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
+document.getElementById('synonyms').addEventListener('keydown', e => { if (e.key === 'Enter') doSearch(); });
+
+loadStatus();
+</script>
+</body>
+</html>

@@ -4,13 +4,15 @@ build-backend = "setuptools.backends._legacy:_Backend"
 
 [project]
 name = "plant-precis-producer"
-version = "1.0.0"
+version = "1.1.0"
 description = "Plant pharmacopoeia reference compilation tool"
 license = {text = "GPL-3.0"}
 requires-python = ">=3.9"
 dependencies = [
     "pypdf>=4.0",
     "reportlab>=4.0",
+    "fastapi>=0.110",
+    "uvicorn>=0.27",
 ]
 
 [project.scripts]
