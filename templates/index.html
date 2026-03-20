@@ -176,7 +176,7 @@ function renderResults(plantName) {
     grouped[lens].push(r);
   }
 
-  const lensOrder = ['traditional', 'modern', 'microscopy', 'other'];
+  const lensOrder = ['traditional', 'modern', 'peer_reviewed', 'microscopy', 'other'];
   let idx = 0;
 
   for (const lens of lensOrder) {
@@ -188,7 +188,13 @@ function renderResults(plantName) {
 
     for (const r of grouped[lens]) {
       const match = r.matched_lines[0] || '';
-      const pageHint = extractPageFromLine(match, r.offset_mode);
+      let pageHint;
+      if (r.source === 'external' && r.total_pages) {
+        // External papers: default to full text
+        pageHint = `1-${r.total_pages}`;
+      } else {
+        pageHint = extractPageFromLine(match, r.offset_mode);
+      }
       div.innerHTML += `
         <div class="source-item">
           <input type="checkbox" checked data-idx="${idx}" data-type="book"

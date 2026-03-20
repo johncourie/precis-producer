@@ -126,6 +126,8 @@ class AppState:
                     "lens": book.get("lens", []),
                     "offset_mode": book.get("offset_mode", "fixed"),
                     "matched_lines": unique[:10],
+                    "source": book.get("source", "bundled"),
+                    "total_pages": book.get("total_pages"),
                 })
 
         return results
