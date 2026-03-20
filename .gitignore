@@ -1,8 +1,21 @@
-# Source PDFs (copyrighted)
+# Source PDFs — ignored by default (copyrighted books)
 *.pdf
 
-# Extracted indexes (derived from copyrighted books)
-_indexes/
+# Public domain PDFs — tracked
+!1919-Ellingwood-American-Materia-Medica-Therapeutics-Pharmacognosy.pdf
+!5-1898-Felter-Lloyd-Kings-American-Dispensatory.pdf
+!Felters_Materia_Medica.pdf
+!potterscyclopaed00wreniala.pdf
+
+# Extracted indexes — ignored by default (use _indexes/* not _indexes/ so negation works)
+_indexes/*
+
+# Public domain book indexes — tracked
+!_indexes/ellingwood.txt
+!_indexes/kings.txt
+!_indexes/kings_lookup.json
+!_indexes/felter_mm.txt
+!_indexes/potters.txt
 
 # Generated output
 precis/
