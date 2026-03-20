@@ -1,0 +1,70 @@
+{
+  "books": [
+    {
+      "id": "ahp",
+      "file": "American Herbal Pharmacopoeia - Graff - 2011.pdf",
+      "short_name": "AHP",
+      "citation_template": "Upton, R. et al. (2011). AHP: Botanical Pharmacognosy. pp. {pages}.",
+      "total_pages": 774,
+      "page_offset": 47,
+      "offset_mode": "fixed",
+      "index_file": "_indexes/ahp.txt",
+      "index_pdf_pages": "10-17",
+      "typical_monograph_pages": "4-6",
+      "notes": "Section 2 Botanical Microscopy Atlas. Many pages are image-only (microscopy plates). Entries by Latin binomial."
+    },
+    {
+      "id": "bhp",
+      "file": "British herbal pharmacopoedia.pdf",
+      "short_name": "BHP",
+      "citation_template": "BHMA. (1983). British Herbal Pharmacopoeia. pp. {pages}.",
+      "total_pages": 264,
+      "page_offset": 4,
+      "offset_mode": "fixed",
+      "index_file": "_indexes/bhp.txt",
+      "index_pdf_pages": "252-260",
+      "typical_monograph_pages": "1-2",
+      "notes": "Alphabetical index of botanical names, common names, and synonyms with printed page numbers."
+    },
+    {
+      "id": "wichtl",
+      "file": "Herbal drugs and phytopharmaceuticals.pdf",
+      "short_name": "Wichtl",
+      "citation_template": "Wichtl, M. (1994). Herbal Drugs and Phytopharmaceuticals. pp. {pages}.",
+      "total_pages": 592,
+      "page_offset": 20,
+      "offset_mode": "fixed",
+      "index_file": "_indexes/wichtl.txt",
+      "index_pdf_pages": "15-35",
+      "typical_monograph_pages": "3-4",
+      "notes": "TOC with Latin drug names (e.g., Millefolii herba). Monographs include pharmacognosy, TLC, indications."
+    },
+    {
+      "id": "atlas",
+      "file": "Atlas of Microscopy of Medicinal Plants, Culinary Herbs and -- Betty P_ Jackson, Derek W_ Snowdon.pdf",
+      "short_name": "Atlas (Jackson)",
+      "citation_template": "Jackson, B.P. & Snowdon, D.W. (1990). Atlas of Microscopy. pp. {pages}.",
+      "total_pages": 265,
+      "page_offset": 9,
+      "offset_mode": "fixed",
+      "index_file": "_indexes/atlas.txt",
+      "index_pdf_pages": "5-6",
+      "typical_monograph_pages": "2",
+      "notes": "Contents by common name. Each entry is typically 2 pages (description + plate)."
+    },
+    {
+      "id": "ep",
+      "file": "European Pharmacopoeia 5th Ed.pdf",
+      "short_name": "EP 5th Ed",
+      "citation_template": "Council of Europe. (2004). European Pharmacopoeia 5th Ed. {ep_drug_name}.",
+      "total_pages": 2677,
+      "page_offset": null,
+      "offset_mode": "lookup",
+      "lookup_file": "_indexes/ep_herbal_lookup.json",
+      "index_file": "_indexes/ep.txt",
+      "index_pdf_pages": "2648-2677",
+      "typical_monograph_pages": "1-3",
+      "notes": "Non-linear page offsets. Uses ep_herbal_lookup.json mapping drug names to actual PDF pages. Herbal entries filtered from full index by suffixes (herba, radix, folium, flos, fructus, cortex, rhizoma, semen, aetheroleum)."
+    }
+  ]
+}

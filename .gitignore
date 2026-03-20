@@ -1,0 +1,21 @@
+# Source PDFs (copyrighted)
+*.pdf
+
+# Extracted indexes (derived from copyrighted books)
+_indexes/
+
+# Generated output
+precis/
+
+# Per-run manifest
+manifest.json
+
+# Local book registry (use books.example.json as template)
+books.json
+
+# Python
+__pycache__/
+*.pyc
+
+# macOS
+.DS_Store
