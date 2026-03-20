@@ -1,19 +1,103 @@
-# Plant Precis Producer
+<div align="center">
+  <img src="resources/ppp-logo.jpg" alt="Plant Precis Producer" width="120"/>
+  <h1>Plant Precis Producer</h1>
+  <p><em>Compile per-plant reference sheets from pharmacopoeia and journal sources</em></p>
+</div>
 
-A tool for compiling per-plant reference précis from pharmacopoeia PDFs, Zotero libraries, and external directories. Sources can be viewed through different **lenses** — traditional, modern, or peer-reviewed — giving you control over the perspective of your research compilation.
+---
 
-Built to work with [Claude Code](https://claude.ai/claude-code) as an AI-assisted lookup agent — see `PRECIS_PROMPT.md` for the full prompt.
+## Hey. We need to talk about your workflow.
 
-## Setup
+You're a modern herbalist. You've got all these PDFs — Felter, King's, Ellingwood, Potter's, that AHP monograph you paid actual money for, three Wichtl editions in two languages — and then there's your Zotero library, which at this point is basically a second career. Hundreds of peer-reviewed papers, lovingly tagged, sitting there full of alkaloid profiles and clinical outcomes and ethnobotanical edge cases.
 
-### Prerequisites
+And when you want to look up a specific plant?
 
-- **Python 3.9+**
+You open six PDFs. You Ctrl+F. You lose the thread in King's American Dispensatory because that thing is three thousand pages long and the index is in the back and the page numbers don't match the PDF pages. You tab over to Zotero. You search. You get fourteen results. You open them. You lose the thread again. You check your notes from last semester. The notes are in a folder called "Herbs Final?" on a desktop you no longer have.
+
+That's so, like, *last century*, man.
+
+Plant Precis Producer takes your plant name, reaches into all of your sources simultaneously — traditional pharmacopoeias, modern references, your entire Zotero library, loose PDFs in whatever folder you've been dumping them into — and compiles a single, lens-organized reference document. Traditional sources grouped together. Peer-reviewed separately. Microscopy if you need it. One PDF, table of contents included, ready in seconds.
+
+It runs locally. Your books stay on your machine. Nothing is uploaded anywhere. It's just you, your library, and significantly less yak-shaving.
+
+<div align="center">
+  <img src="resources/WebView.png" alt="Plant Precis Producer interface" width="700"/>
+  <br/>
+  <em>The full interface — search by plant name, select lenses, compile.</em>
+</div>
+
+---
+
+## Installation
+
+### Option A — Let Claude Cowork install it for you
+
+If you have [Claude Desktop](https://claude.ai) with Cowork, you don't need to touch a terminal. The repository includes a [`COWORK_INSTALL.md`](COWORK_INSTALL.md) workflow that Cowork can follow:
+
+1. **Open Claude Desktop** and start a Cowork session.
+2. **Tell it:** *"Install Plant Precis Producer from https://github.com/johncourie/plant-precis-producer — follow the COWORK_INSTALL.md workflow"*
+3. Cowork will execute six supervised steps — checking Python, installing poppler, installing dependencies, writing configs, verifying the install, and launching the server. **Each step pauses for your permission** before doing anything to your system.
+4. When done, the browser opens to the setup page at `http://localhost:7734/setup`.
+
+Every step calls an idempotent function from `install_steps.sh`. If something fails, Cowork can safely re-run that step.
+
+On first launch, the setup page will ask you:
+- Whether you want to connect your Zotero library (auto-detected if installed)
+- Whether you have any other PDF directories you want to include
+
+Both are configured through the browser — no config file editing required.
+
+---
+
+### Option B — Claude Code users
+
+If you already have [Claude Code](https://claude.ai/claude-code) running, you can install and manage Plant Precis Producer from within your Claude Code session.
+
+**To install:**
+
+Open Claude Code and paste this prompt:
+
+```
+Clone https://github.com/johncourie/plant-precis-producer, install its 
+dependencies (poppler and the Python packages), copy the example config 
+files to their working names, and start the local server. Then open 
+localhost:7734 in my browser.
+```
+
+Claude Code will handle the setup and tell you if anything needs your attention.
+
+**To add your books:**
+
+Put your PDFs in the `plant-precis-producer/` folder on your machine. Then tell Claude Code:
+
+```
+Index the new book I added to plant-precis-producer — it's called 
+[filename.pdf], it's a [modern / traditional / peer-reviewed] source, 
+and the author and year are [X].
+```
+
+Claude Code will probe the PDF, find the index pages, extract the index, and register the book. You don't need to know what any of that means.
+
+**To start it again later:**
+
+```
+Start the Plant Precis Producer server and open it in my browser.
+```
+
+---
+
+### Option C — Command line install
+
+For users comfortable with a terminal.
+
+#### Prerequisites
+
+- Python 3.9+
 - **poppler** (provides `pdftotext`):
   - macOS: `brew install poppler`
   - Ubuntu/Debian: `sudo apt install poppler-utils`
 
-### Install
+#### Install
 
 ```bash
 git clone https://github.com/johncourie/plant-precis-producer.git
@@ -24,169 +108,103 @@ make setup
 Or manually:
 
 ```bash
-pip install pypdf reportlab
+pip install pypdf reportlab fastapi uvicorn
 cp books.example.json books.json
 cp config.example.json config.json
 ```
 
-### Configure (optional)
-
-Edit `config.json` to:
-- Enable **Zotero integration** (if Zotero is installed locally)
-- Add **external directories** containing your own PDFs
-- Set **default lenses** for compilation
-
-## Quick Start
-
-The repo includes 4 public domain texts ready to use:
+#### Run
 
 ```bash
-# Compile a test précis for Yarrow
-cat > manifest.json << 'EOF'
-{
-  "plant": "Achillea millefolium",
-  "lenses": ["traditional"],
-  "sources": [
-    {"file": "potterscyclopaed00wreniala.pdf", "pages": "309-310", "lens": ["traditional"]},
-    {"file": "1919-Ellingwood-American-Materia-Medica-Therapeutics-Pharmacognosy.pdf", "pages": "2-3", "lens": ["traditional"]},
-    {"file": "Felters_Materia_Medica.pdf", "pages": "4-4", "lens": ["traditional"]}
-  ]
-}
-EOF
-python3 compile_precis.py manifest.json
+make serve
 ```
 
-Output appears in `precis/` with sources grouped by lens in the table of contents.
+This starts the local server and opens `http://localhost:7734` in your browser.
 
-## Lenses
+#### Configure Zotero and external directories
 
-Each book is tagged with one or more **lenses** that describe its perspective:
+Edit `config.json`:
 
-| Lens | Description | Examples |
-|------|-------------|----------|
-| `traditional` | Historical/eclectic texts (pre-1930) | Ellingwood, Felter, King's, Potter's |
-| `modern` | Contemporary pharmacopoeias | AHP, BHP, Wichtl, EP |
-| `peer_reviewed` | Journal articles | Zotero library, external papers |
-| `microscopy` | Microscopy atlases | AHP, Atlas (Jackson) |
+```json
+{
+  "zotero": {
+    "enabled": true,
+    "db_path": "~/Zotero/zotero.sqlite",
+    "storage_path": "~/Zotero/storage",
+    "priority_collections": ["Herbs"]
+  },
+  "external_dirs": [
+    {
+      "path": "~/Documents/herb-papers",
+      "lens": ["peer_reviewed"]
+    }
+  ]
+}
+```
 
-When compiling a précis, specify which lenses to include. The table of contents groups sources by lens.
-
-## Included Public Domain Texts
-
-These four texts ship with the repository (`traditional` lens):
-
-| Book | Author | Year | Pages |
-|------|--------|------|-------|
-| Potter's Cyclopaedia of Botanical Drugs | R.C. Wren | 1907 | 386 |
-| American Materia Medica, Therapeutics and Pharmacognosy | F. Ellingwood | 1919 | 470 |
-| The Eclectic Materia Medica, Pharmacology and Therapeutics | H.W. Felter | 1922 | 480 |
-| King's American Dispensatory | H.W. Felter & J.U. Lloyd | 1898 | 2,977 |
-
-## Adding Your Own Books
-
-Your own books and their indexes are automatically gitignored.
-
-### Probe, Index, Verify
+Then scan your external directories:
 
 ```bash
-# Phase 1: Probe — find the index/TOC pages
+python3 scan_external.py
+```
+
+#### Adding a new book (CLI)
+
+```bash
+# Phase 1: find the index/TOC pages
 python3 index_new_book.py "New Book.pdf" --id newbook --probe-only
 
-# Phase 2: Index — extract and register
+# Phase 2: extract and register
 python3 index_new_book.py "New Book.pdf" \
     --id newbook \
     --short-name "NewBook" \
     --index-pages 5-12 \
     --lens "modern" \
     --citation "Author. (Year). Title. pp. {pages}."
-
-# Phase 3: Verify — compile a test précis
 ```
 
-The script auto-detects page offsets. If auto-detection fails, provide `--offset N`.
+---
 
-## Zotero Integration
+## Included public domain texts
 
-If you have [Zotero](https://www.zotero.org/) installed locally, the system can search your library for peer-reviewed papers about a plant.
+Four texts ship with the repository, pre-indexed and ready to use:
 
-1. Enable in `config.json`:
-   ```json
-   {
-     "zotero": {
-       "enabled": true,
-       "db_path": "~/Zotero/zotero.sqlite",
-       "storage_path": "~/Zotero/storage",
-       "priority_collections": ["Herbs"]
-     }
-   }
-   ```
+| Book | Author | Year |
+|---|---|---|
+| Potter's Cyclopaedia of Botanical Drugs | R.C. Wren | 1907 |
+| American Materia Medica, Therapeutics and Pharmacognosy | F. Ellingwood | 1919 |
+| The Eclectic Materia Medica, Pharmacology and Therapeutics | H.W. Felter | 1922 |
+| King's American Dispensatory | H.W. Felter & J.U. Lloyd | 1898 |
 
-2. Search:
-   ```bash
-   python3 zotero_scan.py "Achillea millefolium" --synonyms "yarrow,milfoil"
-   ```
+---
 
-3. Results are returned as JSON, ready for inclusion in a manifest.
+## Lenses
 
-Zotero access is **strictly read-only** — the database is never modified.
+Each source is tagged with one or more lenses that describe its perspective:
 
-## External Directories
+| Lens | Description | Examples |
+|---|---|---|
+| `traditional` | Historical/eclectic texts (pre-1930) | Ellingwood, Felter, King's, Potter's |
+| `modern` | Contemporary pharmacopoeias | AHP, BHP, Wichtl, EP |
+| `peer_reviewed` | Journal articles | Zotero library, external papers |
+| `microscopy` | Microscopy atlases | AHP, Atlas (Jackson) |
 
-Register directories of loose PDFs without copying them:
+The compiled précis groups sources by lens in the table of contents.
 
-```bash
-# One-off scan
-python3 scan_external.py --dir ~/Documents/herb-papers --lens peer_reviewed
+---
 
-# Or configure in config.json and scan all
-python3 scan_external.py
-```
-
-PDFs stay where they are. Only index text and registry entries are created locally.
-
-## How It Works
+## How it works
 
 1. **`books.json`** — Registry of all source books with lens tags, page offsets, and citation templates.
 2. **`config.json`** — System settings: Zotero path, external directories, lens definitions.
-3. **`_indexes/`** — Pre-extracted text indexes for fast plant lookup.
-4. **`compile_precis.py`** — Takes a JSON manifest, extracts pages from PDFs, compiles into a single PDF with a lens-grouped table of contents.
-5. **`zotero_scan.py`** — Searches Zotero's SQLite database (read-only) using collection match, title search, and full-text word search.
-6. **`scan_external.py`** — Scans external directories and registers PDFs in books.json.
+3. **`_indexes/`** — Pre-extracted text indexes loaded into memory at startup for fast plant lookup. Never rebuilt per-request.
+4. **`compile_precis.py`** — Takes a manifest, extracts pages from PDFs, compiles into a single PDF with a lens-grouped table of contents.
+5. **`zotero_scan.py`** — Searches Zotero's SQLite database read-only.
+6. **`scan_external.py`** — Scans external directories and registers PDFs.
 
-## File Structure
-
-```
-├── compile_precis.py          # Main compilation script
-├── index_new_book.py          # Book indexing script
-├── zotero_scan.py             # Zotero search (read-only)
-├── scan_external.py           # External directory scanner
-├── pyproject.toml             # Python packaging
-├── Makefile                   # Setup automation
-│
-├── books.json                 # Book registry (local, gitignored)
-├── books.example.json         # Default registry (PD books)
-├── config.json                # System config (local, gitignored)
-├── config.example.json        # Config template
-├── PRECIS_PROMPT.md           # Claude Code agent prompt
-│
-├── _indexes/                  # Index files
-│   ├── potters.txt            # ✓ tracked (public domain)
-│   ├── ellingwood.txt         # ✓ tracked
-│   ├── felter_mm.txt          # ✓ tracked
-│   ├── kings.txt              # ✓ tracked
-│   ├── kings_lookup.json      # ✓ tracked
-│   └── <your_book>.txt        # ✗ gitignored
-│
-├── *.pdf                      # Source PDFs
-│   ├── (4 PD texts)           # ✓ tracked
-│   └── <your_books>.pdf       # ✗ gitignored
-│
-├── precis/                    # Generated output (gitignored)
-└── manifest.json              # Per-run input (gitignored)
-```
+---
 
 ## License
 
-Code: GPL-3.0 — see [LICENSE](LICENSE).
-
-The included public domain texts are not subject to copyright restrictions.
+Code: GPL-3.0 — see [LICENSE](LICENSE).  
+Included public domain texts are not subject to copyright restrictions.

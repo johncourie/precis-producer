@@ -1,4 +1,4 @@
-.PHONY: setup check-deps install test
+.PHONY: setup check-deps install test serve
 
 setup: check-deps install
 	@echo ""
@@ -19,6 +19,9 @@ check-deps:
 
 install:
 	pip3 install -e .
+
+serve:
+	./start.sh
 
 test:
 	@test -f books.json || (echo "Run: cp books.example.json books.json" && exit 1)
