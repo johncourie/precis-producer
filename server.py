@@ -23,8 +23,9 @@ from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, JSONResponse, StreamingResponse
 from pydantic import BaseModel
 
-from precis_common import load_books, load_config, BASE_DIR, INDEXES_DIR, OUTPUT_DIR
+from precis_common import load_books, save_books, load_config, BASE_DIR, INDEXES_DIR, OUTPUT_DIR
 from compile_precis import compile_precis
+from scan_external import scan_directory, scan_directory_iter
 from zotero_scan import search_plant, open_zotero_db
 
 # ── In-memory state ──────────────────────────────────────────────────────
@@ -355,7 +356,7 @@ class SetupSave(BaseModel):
 
 @app.post("/setup/save")
 def setup_save(req: SetupSave):
-    """Save setup configuration and reload."""
+    """Save setup configuration, index new PDFs, and stream progress via SSE."""
     config = {
         "zotero": {
             "enabled": req.zotero_enabled,
@@ -370,14 +371,30 @@ def setup_save(req: SetupSave):
     with open(config_path, "w") as f:
         json.dump(config, f, indent=2)
 
-    state.load()
+    def generate():
+        new_pdfs = 0
+        if req.external_dirs:
+            books_data = load_books()
+            for dir_config in req.external_dirs:
+                for progress in scan_directory_iter(dir_config, books_data):
+                    yield f"data: {json.dumps(progress)}\n\n"
+                    if progress["event"] == "done":
+                        new_pdfs += progress["new_count"]
+            if new_pdfs > 0:
+                save_books(books_data)
 
-    return {
-        "status": "saved",
-        "zotero_available": state.zotero_available,
-        "book_count": len(state.books),
-        "index_count": len(state.indexes),
-    }
+        state.load()
+        result = {
+            "event": "complete",
+            "status": "saved",
+            "zotero_available": state.zotero_available,
+            "book_count": len(state.books),
+            "index_count": len(state.indexes),
+            "new_pdfs_indexed": new_pdfs,
+        }
+        yield f"data: {json.dumps(result)}\n\n"
+
+    return StreamingResponse(generate(), media_type="text/event-stream")
 
 
 # ── HTML UI ──────────────────────────────────────────────────────────────

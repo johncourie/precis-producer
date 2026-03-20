@@ -155,7 +155,7 @@ The Zotero `db_path` depends on your operating system. Common locations:
 
 Not sure where yours is? In Zotero, go to Edit > Settings > Advanced > Files and Folders > Data Directory Location. The database is `zotero.sqlite` inside that directory. The setup page at `/setup` will also try to auto-detect it for you.
 
-Then scan your external directories:
+If you're using the web UI, external directories are indexed automatically when you click **Save & Continue** on the setup page. If you prefer the command line, you can also scan manually:
 
 ```bash
 python3 scan_external.py
@@ -196,9 +196,9 @@ The very first time you launch, the app opens to a **Setup** page. Here you can:
 
 1. **Connect Zotero** — If Zotero is installed on your computer, the app will detect it automatically. Flip the toggle to enable it. Your Zotero library is never modified — the app only reads from it.
 2. **Add PDF folders** — Click "Add folder", then "Browse..." to navigate to any folder on your computer that contains PDFs you want to search. You can add as many folders as you want. The files stay where they are.
-3. Click **Save & Continue** to go to the search page.
+3. Click **Save & Continue** — the app will automatically index any new PDFs in your folders. You'll see live progress as each file is processed (name, page count). Once indexing finishes, you're taken to the search page.
 
-You can always get back to setup later by clicking "Setup" in the top-right corner of the search page.
+You can always get back to setup later by clicking "Setup" in the top-right corner of the search page. Re-saving will only index PDFs that haven't been indexed yet — it won't re-process existing ones.
 
 ### Searching and compiling
 
@@ -256,7 +256,7 @@ The compiled précis groups sources by lens in the table of contents.
 3. **`_indexes/`** — Pre-extracted text indexes loaded into memory at startup for fast plant lookup. Never rebuilt per-request.
 4. **`compile_precis.py`** — Takes a manifest, extracts pages from PDFs, compiles into a single PDF with a lens-grouped table of contents.
 5. **`zotero_scan.py`** — Searches Zotero's SQLite database read-only.
-6. **`scan_external.py`** — Scans external directories and registers PDFs.
+6. **`scan_external.py`** — Scans external directories and registers PDFs. Called automatically by the web UI on save; also usable as a standalone CLI tool.
 
 ---
 

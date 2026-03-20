@@ -302,20 +302,53 @@ async function saveSetup() {
     external_dirs: extDirs,
   };
 
+  const saveMsg = document.getElementById('save-msg');
+  saveMsg.innerHTML = '<div class="msg">Saving configuration...</div>';
+
   const r = await fetch('/setup/save', {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify(body),
   });
-  const result = await r.json();
 
-  const zBadge = result.zotero_available
-    ? '<span class="status-badge badge-green">connected</span>'
-    : '<span class="status-badge badge-grey">off</span>';
+  const reader = r.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = '';
 
-  document.getElementById('save-msg').innerHTML =
-    `<div class="msg msg-success">Saved. ${result.book_count} books, ${result.index_count} indexes. Zotero: ${zBadge}
-    <br><a href="/" style="margin-top:8px;display:inline-block">Go to search &rarr;</a></div>`;
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+
+    buffer += decoder.decode(value, { stream: true });
+    const lines = buffer.split('\n');
+    buffer = lines.pop();
+
+    for (const line of lines) {
+      if (!line.startsWith('data: ')) continue;
+      const msg = JSON.parse(line.slice(6));
+
+      if (msg.event === 'scanning') {
+        saveMsg.innerHTML =
+          `<div class="msg">Indexing PDF ${msg.current} of ${msg.total}: <strong>${msg.file}</strong></div>`;
+      } else if (msg.event === 'indexed') {
+        saveMsg.innerHTML =
+          `<div class="msg">Indexed ${msg.current} of ${msg.total}: <strong>${msg.file}</strong> (${msg.pages} pages)</div>`;
+      } else if (msg.event === 'skipped') {
+        saveMsg.innerHTML =
+          `<div class="msg">Skipped: ${msg.file} — ${msg.detail}</div>`;
+      } else if (msg.event === 'complete') {
+        const zBadge = msg.zotero_available
+          ? '<span class="status-badge badge-green">connected</span>'
+          : '<span class="status-badge badge-grey">off</span>';
+        const newNote = msg.new_pdfs_indexed > 0
+          ? ` (${msg.new_pdfs_indexed} new PDFs indexed)`
+          : '';
+        saveMsg.innerHTML =
+          `<div class="msg msg-success">Saved. ${msg.book_count} books, ${msg.index_count} indexes${newNote}. Zotero: ${zBadge}
+          <br><a href="/" style="margin-top:8px;display:inline-block">Go to search &rarr;</a></div>`;
+      }
+    }
+  }
 }
 
 // Close modal on overlay click

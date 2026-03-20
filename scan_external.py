@@ -103,6 +103,81 @@ def scan_directory(dir_config, books_data):
     return new_count
 
 
+def scan_directory_iter(dir_config, books_data):
+    """Like scan_directory but yields progress dicts for each PDF.
+
+    Yields dicts with keys: event (scanning|indexed|skipped|error|done), file, detail.
+    """
+    dir_path = os.path.expanduser(dir_config["path"])
+    lens_tags = dir_config.get("lens", [])
+    label = dir_config.get("label", dir_path)
+
+    if not os.path.isdir(dir_path):
+        yield {"event": "error", "file": dir_path, "detail": "Directory not found"}
+        return
+
+    registered = {b["file"] for b in books_data["books"]}
+
+    # Collect PDFs to process
+    pdf_files = []
+    for root, _, files in os.walk(dir_path):
+        for fname in sorted(files):
+            if fname.lower().endswith('.pdf'):
+                pdf_files.append((root, fname))
+
+    total = len(pdf_files)
+    new_count = 0
+    for i, (root, fname) in enumerate(pdf_files, 1):
+        abs_path = os.path.join(root, fname)
+
+        if abs_path in registered:
+            continue
+
+        yield {"event": "scanning", "file": fname, "current": i, "total": total}
+
+        total_pages = get_pdf_page_count(abs_path)
+        if total_pages is None:
+            yield {"event": "skipped", "file": fname, "detail": "Could not read PDF"}
+            continue
+
+        book_id = make_book_id(abs_path)
+        existing_ids = {b["id"] for b in books_data["books"]}
+        if book_id in existing_ids:
+            suffix = 1
+            while f"{book_id}_{suffix}" in existing_ids:
+                suffix += 1
+            book_id = f"{book_id}_{suffix}"
+
+        index_text = extract_text_range(abs_path, 1, min(5, total_pages), timeout=30)
+        INDEXES_DIR.mkdir(exist_ok=True)
+        index_path = INDEXES_DIR / f"{book_id}.txt"
+        with open(index_path, "w") as f:
+            f.write(index_text)
+
+        book_config = {
+            "id": book_id,
+            "file": abs_path,
+            "short_name": Path(fname).stem[:40],
+            "lens": lens_tags,
+            "citation_template": f"{Path(fname).stem}. pp. {{pages}}.",
+            "total_pages": total_pages,
+            "page_offset": 0,
+            "offset_mode": "fixed",
+            "index_file": f"_indexes/{book_id}.txt",
+            "index_pdf_pages": f"1-{min(5, total_pages)}",
+            "typical_monograph_pages": "1-1",
+            "notes": f"External: {label}",
+            "source": "external",
+        }
+        books_data["books"].append(book_config)
+        new_count += 1
+
+        yield {"event": "indexed", "file": fname, "current": i, "total": total,
+               "book_id": book_id, "pages": total_pages}
+
+    yield {"event": "done", "new_count": new_count}
+
+
 def main_cli():
     """CLI entry point."""
     parser = argparse.ArgumentParser(
