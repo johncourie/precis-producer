@@ -252,11 +252,73 @@ def reload_indexes():
     return {"status": "reloaded", "book_count": len(state.books), "index_count": len(state.indexes)}
 
 
+# ── Setup API ────────────────────────────────────────────────────────────
+
+@app.get("/setup/status")
+def setup_status():
+    """Get current config for the setup page."""
+    config = load_config() or {"zotero": {"enabled": False}, "external_dirs": []}
+    zotero_cfg = config.get("zotero", {})
+    db_path = os.path.expanduser(zotero_cfg.get("db_path", "~/Zotero/zotero.sqlite"))
+
+    return {
+        "zotero_detected": os.path.exists(db_path),
+        "zotero_enabled": zotero_cfg.get("enabled", False),
+        "zotero_db_path": zotero_cfg.get("db_path", "~/Zotero/zotero.sqlite"),
+        "zotero_storage_path": zotero_cfg.get("storage_path", "~/Zotero/storage"),
+        "priority_collections": zotero_cfg.get("priority_collections", []),
+        "external_dirs": config.get("external_dirs", []),
+        "book_count": len(state.books),
+        "index_count": len(state.indexes),
+    }
+
+
+class SetupSave(BaseModel):
+    zotero_enabled: bool = False
+    zotero_db_path: str = "~/Zotero/zotero.sqlite"
+    zotero_storage_path: str = "~/Zotero/storage"
+    priority_collections: list[str] = []
+    external_dirs: list[dict] = []
+
+
+@app.post("/setup/save")
+def setup_save(req: SetupSave):
+    """Save setup configuration and reload."""
+    config = {
+        "zotero": {
+            "enabled": req.zotero_enabled,
+            "db_path": req.zotero_db_path,
+            "storage_path": req.zotero_storage_path,
+            "priority_collections": req.priority_collections,
+        },
+        "external_dirs": req.external_dirs,
+    }
+
+    config_path = BASE_DIR / "config.json"
+    with open(config_path, "w") as f:
+        json.dump(config, f, indent=2)
+
+    state.load()
+
+    return {
+        "status": "saved",
+        "zotero_available": state.zotero_available,
+        "book_count": len(state.books),
+        "index_count": len(state.indexes),
+    }
+
+
 # ── HTML UI ──────────────────────────────────────────────────────────────
 
 @app.get("/", response_class=HTMLResponse)
 def ui():
     html_path = BASE_DIR / "templates" / "index.html"
+    return html_path.read_text()
+
+
+@app.get("/setup", response_class=HTMLResponse)
+def setup_ui():
+    html_path = BASE_DIR / "templates" / "setup.html"
     return html_path.read_text()
 
 

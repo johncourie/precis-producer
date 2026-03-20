@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Setup — Plant Precis Producer</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f5f5f0; color: #333; max-width: 700px; margin: 0 auto; padding: 20px; }
+  h1 { font-size: 1.6em; margin-bottom: 4px; color: #2c3e50; }
+  .subtitle { color: #777; font-size: 0.9em; margin-bottom: 24px; }
+  .card { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin-bottom: 16px; }
+  .card h2 { font-size: 1.05em; margin-bottom: 10px; color: #34495e; }
+  .card p { font-size: 0.9em; color: #666; margin-bottom: 12px; }
+  label { display: block; margin-bottom: 6px; font-size: 0.9em; font-weight: 500; }
+  input[type="text"] { width: 100%; padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95em; margin-bottom: 10px; }
+  input[type="text"]:focus { outline: none; border-color: #5b7fa6; box-shadow: 0 0 0 2px rgba(91,127,166,0.2); }
+  .toggle { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+  .toggle input { width: 18px; height: 18px; }
+  .toggle label { margin: 0; font-weight: normal; }
+  button { padding: 8px 20px; border: none; border-radius: 4px; font-size: 0.95em; cursor: pointer; }
+  .btn-primary { background: #5b7fa6; color: #fff; }
+  .btn-primary:hover { background: #4a6d91; }
+  .btn-secondary { background: #e0e0e0; color: #333; font-size: 0.85em; }
+  .btn-secondary:hover { background: #d0d0d0; }
+  .btn-danger { background: #e57373; color: #fff; font-size: 0.85em; padding: 4px 10px; }
+  .status-badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 0.8em; font-weight: 500; }
+  .badge-green { background: #e8f5e9; color: #2e7d32; }
+  .badge-grey { background: #eee; color: #666; }
+  .badge-red { background: #fdecea; color: #b71c1c; }
+  .ext-dir { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+  .ext-dir input { flex: 1; margin-bottom: 0; }
+  .ext-dir select { padding: 7px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.9em; }
+  .actions { display: flex; gap: 10px; align-items: center; margin-top: 16px; }
+  .msg { padding: 10px; border-radius: 4px; margin-top: 12px; font-size: 0.9em; }
+  .msg-success { background: #e8f5e9; color: #1b5e20; }
+  .summary { font-size: 0.9em; color: #555; margin-top: 8px; }
+</style>
+</head>
+<body>
+
+<h1>Setup</h1>
+<p class="subtitle">Configure your Plant Precis Producer installation</p>
+
+<div class="card">
+  <h2>Zotero Integration</h2>
+  <p>Connect to your local Zotero library for peer-reviewed literature search.</p>
+
+  <div id="zotero-status"></div>
+
+  <div class="toggle">
+    <input type="checkbox" id="zotero-enabled">
+    <label for="zotero-enabled">Enable Zotero integration</label>
+  </div>
+
+  <div id="zotero-fields" style="display:none">
+    <label>Database path</label>
+    <input type="text" id="zotero-db" value="~/Zotero/zotero.sqlite">
+    <label>Storage path</label>
+    <input type="text" id="zotero-storage" value="~/Zotero/storage">
+    <label>Priority collections (comma-separated)</label>
+    <input type="text" id="zotero-collections" placeholder="Herbs, Herbal Concepts">
+  </div>
+</div>
+
+<div class="card">
+  <h2>External PDF Directories</h2>
+  <p>Add folders containing PDFs you want to search. Files stay in place — nothing is copied.</p>
+
+  <div id="ext-dirs"></div>
+  <button class="btn-secondary" onclick="addExtDir()">+ Add directory</button>
+</div>
+
+<div class="card">
+  <h2>Library Status</h2>
+  <div id="lib-summary" class="summary">Loading...</div>
+</div>
+
+<div class="actions">
+  <button class="btn-primary" onclick="saveSetup()">Save &amp; Continue</button>
+</div>
+<div id="save-msg"></div>
+
+<script>
+let setupData = null;
+
+async function loadSetup() {
+  const r = await fetch('/setup/status');
+  setupData = await r.json();
+
+  // Zotero
+  const badge = setupData.zotero_detected
+    ? '<span class="status-badge badge-green">Zotero detected</span>'
+    : '<span class="status-badge badge-grey">Zotero not found</span>';
+  document.getElementById('zotero-status').innerHTML = badge;
+  document.getElementById('zotero-enabled').checked = setupData.zotero_enabled;
+  document.getElementById('zotero-db').value = setupData.zotero_db_path;
+  document.getElementById('zotero-storage').value = setupData.zotero_storage_path;
+  document.getElementById('zotero-collections').value = (setupData.priority_collections || []).join(', ');
+  toggleZoteroFields();
+
+  // External dirs
+  const container = document.getElementById('ext-dirs');
+  container.innerHTML = '';
+  for (const d of setupData.external_dirs || []) {
+    addExtDir(d.path, (d.lens || [])[0] || 'peer_reviewed');
+  }
+
+  // Summary
+  document.getElementById('lib-summary').textContent =
+    `${setupData.book_count} books loaded, ${setupData.index_count} indexes in memory`;
+}
+
+document.getElementById('zotero-enabled').addEventListener('change', toggleZoteroFields);
+
+function toggleZoteroFields() {
+  document.getElementById('zotero-fields').style.display =
+    document.getElementById('zotero-enabled').checked ? 'block' : 'none';
+}
+
+function addExtDir(path, lens) {
+  const container = document.getElementById('ext-dirs');
+  const div = document.createElement('div');
+  div.className = 'ext-dir';
+  div.innerHTML = `
+    <input type="text" class="ext-path" value="${path || ''}" placeholder="~/Documents/herb-papers">
+    <select class="ext-lens">
+      <option value="peer_reviewed" ${lens === 'peer_reviewed' ? 'selected' : ''}>peer reviewed</option>
+      <option value="modern" ${lens === 'modern' ? 'selected' : ''}>modern</option>
+      <option value="traditional" ${lens === 'traditional' ? 'selected' : ''}>traditional</option>
+    </select>
+    <button class="btn-danger" onclick="this.parentElement.remove()">x</button>
+  `;
+  container.appendChild(div);
+}
+
+async function saveSetup() {
+  const collections = document.getElementById('zotero-collections').value
+    .split(',').map(s => s.trim()).filter(Boolean);
+
+  const extDirs = [];
+  document.querySelectorAll('.ext-dir').forEach(div => {
+    const path = div.querySelector('.ext-path').value.trim();
+    const lens = div.querySelector('.ext-lens').value;
+    if (path) extDirs.push({ path, lens: [lens], label: path });
+  });
+
+  const body = {
+    zotero_enabled: document.getElementById('zotero-enabled').checked,
+    zotero_db_path: document.getElementById('zotero-db').value,
+    zotero_storage_path: document.getElementById('zotero-storage').value,
+    priority_collections: collections,
+    external_dirs: extDirs,
+  };
+
+  const r = await fetch('/setup/save', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(body),
+  });
+  const result = await r.json();
+
+  const zBadge = result.zotero_available
+    ? '<span class="status-badge badge-green">connected</span>'
+    : '<span class="status-badge badge-grey">off</span>';
+
+  document.getElementById('save-msg').innerHTML =
+    `<div class="msg msg-success">Saved. ${result.book_count} books, ${result.index_count} indexes. Zotero: ${zBadge}
+    <br><a href="/" style="margin-top:8px;display:inline-block">Go to search &rarr;</a></div>`;
+}
+
+loadSetup();
+</script>
+</body>
+</html>
