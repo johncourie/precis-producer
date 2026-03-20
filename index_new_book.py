@@ -39,24 +39,10 @@ import re
 import sys
 from pathlib import Path
 
-BASE_DIR = Path(__file__).parent
-INDEXES_DIR = BASE_DIR / "_indexes"
-
-
-def get_page_count(pdf_path):
-    """Get total page count using pypdf."""
-    from pypdf import PdfReader
-    reader = PdfReader(str(pdf_path))
-    return len(reader.pages)
-
-
-def extract_text_range(pdf_path, start, end):
-    """Extract text from a range of PDF pages using pdftotext."""
-    result = subprocess.run(
-        ['pdftotext', '-f', str(start), '-l', str(end), '-layout', str(pdf_path), '-'],
-        capture_output=True, text=True, timeout=120
-    )
-    return result.stdout
+from precis_common import (
+    load_books, save_books, extract_text_range, get_pdf_page_count,
+    BASE_DIR, INDEXES_DIR,
+)
 
 
 def extract_page_text(pdf_path, page):
@@ -163,21 +149,10 @@ def build_search_lookup(pdf_path, index_text, filter_terms=None):
 
 def register_book(book_config):
     """Add or update a book entry in books.json."""
-    config_path = BASE_DIR / "books.json"
-
-    if config_path.exists():
-        with open(config_path) as f:
-            config = json.load(f)
-    else:
-        config = {"books": []}
-
-    # Remove existing entry with same id if present
-    config["books"] = [b for b in config["books"] if b["id"] != book_config["id"]]
-    config["books"].append(book_config)
-
-    with open(config_path, 'w') as f:
-        json.dump(config, f, indent=2)
-
+    data = load_books()
+    data["books"] = [b for b in data["books"] if b["id"] != book_config["id"]]
+    data["books"].append(book_config)
+    save_books(data)
     print(f"  Registered '{book_config['id']}' in books.json", file=sys.stderr)
 
 
@@ -211,7 +186,7 @@ def main():
     INDEXES_DIR.mkdir(exist_ok=True)
 
     # ── Step 1: Basic info ─────────────────────────────────────────────
-    total_pages = get_page_count(pdf_path)
+    total_pages = get_pdf_page_count(pdf_path)
     print(f"\n{'='*60}", file=sys.stderr)
     print(f"Indexing: {args.pdf_file}", file=sys.stderr)
     print(f"Pages: {total_pages}", file=sys.stderr)

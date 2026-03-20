@@ -3,15 +3,7 @@
     "enabled": false,
     "db_path": "~/Zotero/zotero.sqlite",
     "storage_path": "~/Zotero/storage",
-    "priority_collections": ["Herbs"],
-    "default_lens": ["peer_reviewed"]
+    "priority_collections": ["Herbs"]
   },
-  "external_dirs": [],
-  "lens_definitions": {
-    "traditional": "Historical and eclectic texts (pre-1930)",
-    "modern": "Contemporary pharmacopoeias and references",
-    "peer_reviewed": "Journal articles and peer-reviewed sources",
-    "microscopy": "Microscopy atlases and visual references"
-  },
-  "default_lenses": ["traditional", "modern"]
+  "external_dirs": []
 }

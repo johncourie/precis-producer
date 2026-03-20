@@ -11,53 +11,14 @@ PDFs stay where they are — no copying.
 """
 
 import argparse
-import json
 import os
-import subprocess
 import sys
 from pathlib import Path
 
-from pypdf import PdfReader
-
-BASE_DIR = Path(__file__).parent
-INDEXES_DIR = BASE_DIR / "_indexes"
-
-
-def load_config():
-    """Load config.json."""
-    config_path = BASE_DIR / "config.json"
-    if not config_path.exists():
-        print("ERROR: config.json not found. Copy config.example.json first.", file=sys.stderr)
-        sys.exit(1)
-    with open(config_path) as f:
-        return json.load(f)
-
-
-def load_books():
-    """Load books.json."""
-    config_path = BASE_DIR / "books.json"
-    if config_path.exists():
-        with open(config_path) as f:
-            return json.load(f)
-    return {"books": []}
-
-
-def save_books(books_data):
-    """Save books.json."""
-    with open(BASE_DIR / "books.json", "w") as f:
-        json.dump(books_data, f, indent=2)
-
-
-def extract_text(pdf_path, start=1, end=5):
-    """Extract text from a range of PDF pages using pdftotext."""
-    try:
-        result = subprocess.run(
-            ['pdftotext', '-f', str(start), '-l', str(end), '-layout', str(pdf_path), '-'],
-            capture_output=True, text=True, timeout=30
-        )
-        return result.stdout
-    except (subprocess.TimeoutExpired, FileNotFoundError):
-        return ""
+from precis_common import (
+    load_books, save_books, load_config, extract_text_range, get_pdf_page_count,
+    INDEXES_DIR,
+)
 
 
 def make_book_id(pdf_path):
@@ -96,11 +57,9 @@ def scan_directory(dir_config, books_data):
             print(f"  Indexing: {fname}", file=sys.stderr)
 
             # Get page count
-            try:
-                reader = PdfReader(abs_path)
-                total_pages = len(reader.pages)
-            except Exception as e:
-                print(f"    WARNING: Could not read {fname}: {e}", file=sys.stderr)
+            total_pages = get_pdf_page_count(abs_path)
+            if total_pages is None:
+                print(f"    WARNING: Could not read {fname}", file=sys.stderr)
                 continue
 
             # Extract first 5 pages as index text
@@ -114,7 +73,7 @@ def scan_directory(dir_config, books_data):
                     suffix += 1
                 book_id = f"{book_id}_{suffix}"
 
-            index_text = extract_text(abs_path, 1, min(5, total_pages))
+            index_text = extract_text_range(abs_path, 1, min(5, total_pages), timeout=30)
             INDEXES_DIR.mkdir(exist_ok=True)
             index_path = INDEXES_DIR / f"{book_id}.txt"
             with open(index_path, "w") as f:
@@ -151,7 +110,6 @@ def main_cli():
     )
     parser.add_argument("--dir", help="Scan a specific directory (overrides config.json)")
     parser.add_argument("--lens", default="", help="Lens tags for --dir (comma-separated)")
-    parser.add_argument("--rescan", action="store_true", help="Re-scan all dirs in config.json")
 
     args = parser.parse_args()
     books_data = load_books()

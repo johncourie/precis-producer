@@ -19,16 +19,7 @@ import sqlite3
 import sys
 from pathlib import Path
 
-BASE_DIR = Path(__file__).parent
-
-
-def load_config():
-    """Load config.json for Zotero settings."""
-    config_path = BASE_DIR / "config.json"
-    if not config_path.exists():
-        return None
-    with open(config_path) as f:
-        return json.load(f)
+from precis_common import load_config, get_pdf_page_count
 
 
 def open_zotero_db(db_path):
@@ -139,16 +130,6 @@ def get_item_collections(conn, item_id):
     return [row["collectionName"] for row in rows]
 
 
-def get_pdf_page_count(pdf_path):
-    """Get page count of a PDF."""
-    try:
-        from pypdf import PdfReader
-        reader = PdfReader(pdf_path)
-        return len(reader.pages)
-    except Exception:
-        return None
-
-
 def get_pdf_attachments(conn, parent_item_id, storage_path):
     """Get all PDF attachments for a parent item."""
     rows = conn.execute("""
@@ -164,6 +145,20 @@ def get_pdf_attachments(conn, parent_item_id, storage_path):
         if path:
             results.append(path)
     return results
+
+
+def _build_result(pdf_path, citation, collections, title, search_method):
+    """Build a standardized Zotero search result dict."""
+    page_count = get_pdf_page_count(pdf_path)
+    return {
+        "file": pdf_path,
+        "pages": f"1-{page_count}" if page_count else "1-1",
+        "citation": citation,
+        "lens": ["peer_reviewed"],
+        "search_method": search_method,
+        "collections": collections,
+        "title": title,
+    }
 
 
 def search_collections(conn, plant_name, synonyms, priority_collections, storage_path):
@@ -228,16 +223,10 @@ def search_collections(conn, plant_name, synonyms, priority_collections, storage
         collections = get_item_collections(conn, item_id)
 
         for pdf_path in pdfs:
-            page_count = get_pdf_page_count(pdf_path)
-            results.append({
-                "file": pdf_path,
-                "pages": f"1-{page_count}" if page_count else "1-1",
-                "citation": citation,
-                "lens": ["peer_reviewed"],
-                "search_method": "collection",
-                "collections": collections,
-                "title": fields.get("title", ""),
-            })
+            results.append(_build_result(
+                pdf_path, citation, collections,
+                fields.get("title", ""), "collection",
+            ))
 
     return results
 
@@ -282,16 +271,10 @@ def search_titles(conn, plant_name, synonyms, storage_path):
         collections = get_item_collections(conn, item_id)
 
         for pdf_path in pdfs:
-            page_count = get_pdf_page_count(pdf_path)
-            results.append({
-                "file": pdf_path,
-                "pages": f"1-{page_count}" if page_count else "1-1",
-                "citation": citation,
-                "lens": ["peer_reviewed"],
-                "search_method": "title",
-                "collections": collections,
-                "title": fields.get("title", row["title"]),
-            })
+            results.append(_build_result(
+                pdf_path, citation, collections,
+                fields.get("title", row["title"]), "title",
+            ))
 
     return results
 
@@ -341,16 +324,10 @@ def search_fulltext(conn, plant_name, storage_path, max_results=10):
         citation = format_citation(fields, creators)
         collections = get_item_collections(conn, parent_id)
 
-        page_count = get_pdf_page_count(pdf_path)
-        results.append({
-            "file": pdf_path,
-            "pages": f"1-{page_count}" if page_count else "1-1",
-            "citation": citation,
-            "lens": ["peer_reviewed"],
-            "search_method": "fulltext",
-            "collections": collections,
-            "title": fields.get("title", ""),
-        })
+        results.append(_build_result(
+            pdf_path, citation, collections,
+            fields.get("title", ""), "fulltext",
+        ))
 
         if len(results) >= max_results:
             break

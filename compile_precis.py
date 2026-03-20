@@ -34,17 +34,7 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib import colors
 
-# ── Configuration ──────────────────────────────────────────────────────────
-
-BASE_DIR = Path(__file__).parent
-OUTPUT_DIR = BASE_DIR / "precis"
-
-
-def load_books_config():
-    """Load books.json configuration."""
-    config_path = BASE_DIR / "books.json"
-    with open(config_path) as f:
-        return json.load(f)["books"]
+from precis_common import load_books, BASE_DIR, OUTPUT_DIR
 
 
 def get_book_by_filename(books, filename):
@@ -204,7 +194,7 @@ def build_toc_pdf(plant_name, toc_entries, toc_path):
 
 def compile_precis(manifest):
     """Main compilation function."""
-    books = load_books_config()
+    books = load_books()["books"]
     plant_name = manifest["plant"]
     sources = manifest["sources"]
 
