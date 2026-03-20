@@ -5,17 +5,19 @@ compile_precis.py — Compile a per-plant reference précis from pharmacopoeia P
 Input:  A JSON manifest (from stdin or file) with structure:
         {
           "plant": "Achillea millefolium",
+          "lenses": ["traditional", "modern"],    (optional — filter sources)
           "sources": [
-            {"file": "...", "pages": "209-212", "citation": "..."},
+            {"file": "...", "pages": "209-212", "citation": "...", "lens": ["modern"]},
             ...
           ]
         }
 
         Page numbers in the manifest are PRINTED page numbers from each book's index.
         This script handles the offset to PDF page numbers internally via books.json.
+        File paths may be relative (to the project dir) or absolute (external/Zotero).
 
 Output: A single PDF in the output directory with:
-        - A generated TOC cover page listing each source with compiled page numbers
+        - A generated TOC cover page listing each source grouped by lens
         - The extracted pages from each source appended sequentially
 """
 
@@ -141,19 +143,61 @@ def build_toc_pdf(plant_name, toc_entries, toc_path):
         spaceAfter=14, leftIndent=18,
     )
 
+    section_style = ParagraphStyle(
+        'SectionHeader', parent=styles['Heading3'],
+        fontSize=11, spaceAfter=6, spaceBefore=14,
+        textColor=colors.Color(0.2, 0.2, 0.5),
+    )
+
     story = []
     story.append(Paragraph(plant_name, title_style))
     story.append(Paragraph("Reference Pr&eacute;cis", subtitle_style))
     story.append(Spacer(1, 12))
 
-    for i, entry in enumerate(toc_entries, 1):
-        citation_text = f"{i}. {entry['citation']}"
-        story.append(Paragraph(citation_text, citation_style))
-        page_text = (
-            f"pp. {entry['compiled_start']}&ndash;{entry['compiled_end']} "
-            f"({entry['page_count']} pages)"
-        )
-        story.append(Paragraph(page_text, page_ref_style))
+    # Group entries by lens for display
+    lens_labels = {
+        "traditional": "Traditional Sources",
+        "modern": "Modern Pharmacopoeias",
+        "peer_reviewed": "Peer-Reviewed Literature",
+        "microscopy": "Microscopy References",
+    }
+
+    # Check if any entries have lens info
+    has_lenses = any(entry.get("lens") for entry in toc_entries)
+
+    if has_lenses:
+        # Group by primary lens (first in the array)
+        grouped = {}
+        for entry in toc_entries:
+            primary = entry.get("lens", ["other"])[0] if entry.get("lens") else "other"
+            grouped.setdefault(primary, []).append(entry)
+
+        # Display order
+        lens_order = ["traditional", "modern", "microscopy", "peer_reviewed", "other"]
+        entry_num = 1
+        for lens_key in lens_order:
+            if lens_key not in grouped:
+                continue
+            label = lens_labels.get(lens_key, lens_key.replace("_", " ").title())
+            story.append(Paragraph(label, section_style))
+            for entry in grouped[lens_key]:
+                citation_text = f"{entry_num}. {entry['citation']}"
+                story.append(Paragraph(citation_text, citation_style))
+                page_text = (
+                    f"pp. {entry['compiled_start']}&ndash;{entry['compiled_end']} "
+                    f"({entry['page_count']} pages)"
+                )
+                story.append(Paragraph(page_text, page_ref_style))
+                entry_num += 1
+    else:
+        for i, entry in enumerate(toc_entries, 1):
+            citation_text = f"{i}. {entry['citation']}"
+            story.append(Paragraph(citation_text, citation_style))
+            page_text = (
+                f"pp. {entry['compiled_start']}&ndash;{entry['compiled_end']} "
+                f"({entry['page_count']} pages)"
+            )
+            story.append(Paragraph(page_text, page_ref_style))
 
     doc.build(story)
 
@@ -174,7 +218,12 @@ def compile_precis(manifest):
 
     for source in sources:
         filename = source["file"]
-        pdf_path = BASE_DIR / filename
+
+        # Resolve path: absolute or relative to BASE_DIR
+        if os.path.isabs(filename):
+            pdf_path = Path(filename)
+        else:
+            pdf_path = BASE_DIR / filename
 
         if not pdf_path.exists():
             print(f"WARNING: {pdf_path} not found, skipping.", file=sys.stderr)
@@ -182,8 +231,13 @@ def compile_precis(manifest):
 
         book = get_book_by_filename(books, filename)
         if book is None:
-            print(f"WARNING: {filename} not registered in books.json, skipping.", file=sys.stderr)
-            continue
+            # Unregistered source (e.g., Zotero article) — treat as simple PDF
+            book = {
+                "file": filename,
+                "page_offset": 0,
+                "offset_mode": "fixed",
+                "citation_template": source.get("citation", os.path.basename(filename)),
+            }
 
         page_range = source["pages"]
         start_printed, end_printed = parse_page_range(page_range)
@@ -211,11 +265,17 @@ def compile_precis(manifest):
                 citation = citation.replace("{ep_drug_name}", lookup_key)
                 citation = citation.replace("{lookup_key}", lookup_key)
 
+        # Determine lens for this source
+        source_lens = source.get("lens", [])
+        if not source_lens and book:
+            source_lens = book.get("lens", [])
+
         toc_entries.append({
             "citation": citation,
             "compiled_start": current_page,
             "compiled_end": current_page + page_count - 1,
             "page_count": page_count,
+            "lens": source_lens,
         })
 
         for page in pages:
@@ -257,7 +317,8 @@ def compile_precis(manifest):
     return str(output_path)
 
 
-if __name__ == "__main__":
+def main_cli():
+    """CLI entry point."""
     if len(sys.argv) > 1:
         manifest_path = sys.argv[1]
         with open(manifest_path) as f:
@@ -266,3 +327,7 @@ if __name__ == "__main__":
         manifest = json.load(sys.stdin)
 
     compile_precis(manifest)
+
+
+if __name__ == "__main__":
+    main_cli()

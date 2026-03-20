@@ -23,8 +23,14 @@ precis/
 # Per-run manifest
 manifest.json
 
+# Local config (use config.example.json as template)
+config.json
+
 # Local book registry (use books.example.json as template)
 books.json
+
+# Packaging
+*.egg-info/
 
 # Python
 __pycache__/

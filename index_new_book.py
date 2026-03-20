@@ -196,6 +196,7 @@ def main():
     parser.add_argument('--citation', help='Citation template. Use {pages} for page range, {lookup_key} for drug name.')
     parser.add_argument('--monograph-pages', default='2-4', help='Typical monograph length (e.g., "2-4")')
     parser.add_argument('--filter-terms', help='Comma-separated terms to filter index entries (for lookup mode)')
+    parser.add_argument('--lens', default='', help='Comma-separated lens tags (e.g., "traditional,modern")')
     parser.add_argument('--notes', default='', help='Free-text notes about the book')
     parser.add_argument('--probe-only', action='store_true',
                         help='Only extract candidate index pages for inspection, do not register')
@@ -297,10 +298,13 @@ def main():
     short_name = args.short_name or book_id.upper()
     citation = args.citation or f"{short_name}. pp. {{pages}}."
 
+    lens_tags = [t.strip() for t in args.lens.split(',') if t.strip()] if args.lens else []
+
     book_config = {
         "id": book_id,
         "file": args.pdf_file,
         "short_name": short_name,
+        "lens": lens_tags,
         "citation_template": citation,
         "total_pages": total_pages,
         "page_offset": offset,

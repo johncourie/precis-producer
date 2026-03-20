@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "precis-producer"
+version = "1.0.0"
+description = "Plant pharmacopoeia reference compilation tool"
+license = {text = "GPL-3.0"}
+requires-python = ">=3.9"
+dependencies = [
+    "pypdf>=4.0",
+    "reportlab>=4.0",
+]
+
+[project.scripts]
+compile-precis = "compile_precis:main_cli"
+index-book = "index_new_book:main"
+zotero-scan = "zotero_scan:main_cli"
+scan-external = "scan_external:main_cli"
